@@ -9,7 +9,7 @@ variable "region" {
 
 variable "name" {
   type    = string
-  default = "prod"
+  default = "default"
 }
 
 variable "vpc_cidr" {

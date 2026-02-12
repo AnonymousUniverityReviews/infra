@@ -21,7 +21,7 @@ permissions:
 
 jobs:
   apply:
-    # environment: prod
+    environment: prod
     runs-on: ubuntu-latest
     defaults:
       run:

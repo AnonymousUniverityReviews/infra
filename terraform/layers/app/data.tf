@@ -10,7 +10,7 @@ data "aws_eks_cluster" "eks" {
 data "terraform_remote_state" "eks" {
   backend = "s3"
   config = {
-    bucket = "terraform-project-state-bucket312"
+    bucket = "anonymous-university-reviews-backend-bucket"
     key    = "terraform-ops.tfstate"
     region = var.region
   }
