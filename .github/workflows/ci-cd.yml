@@ -1,0 +1,18 @@
+name: ci-cd
+
+on:
+    pull_request:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+permissions:
+  id-token: write
+
+jobs:
+    deploy:
+        uses: ./.github/workflows/deploy-stack.yml
+        with:
+          WORKSPACE_NAME: 'default'
+          AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}

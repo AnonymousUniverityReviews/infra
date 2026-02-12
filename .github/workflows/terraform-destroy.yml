@@ -1,0 +1,73 @@
+name: terraform destroy
+
+on: 
+    workflow_call:
+        inputs:
+          WORKSPACE_NAME:
+            description: 'Workspace name'
+            required: true
+            type: string
+            default: 'default'
+          LAYER:
+            description: 'Layer name which have to be destroyed (e.g. bootstrap, ops, app)'
+            type: string
+            default: bootstrap
+          AWS_ACCOUNT_ID:
+            required: true
+            type: string
+    workflow_dispatch:
+      inputs:
+        WORKSPACE_NAME:
+          description: 'Workspace name'
+          required: true
+          type: string
+          default: 'default'
+        LAYER:
+          description: 'Layer name which have to be destroyed'
+          required: true
+          default: 'bootstrap'
+          type: choice
+          options:
+            - bootstrap
+            - ops
+            - app
+        AWS_ACCOUNT_ID:
+          required: true
+          type: string
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs: 
+    destroy:
+        runs-on: ubuntu-latest
+        concurrency:
+          group: terraform-state
+          cancel-in-progress: false
+        defaults:
+          run:
+            working-directory: ./terraform/layers/${{ inputs.LAYER }}
+        env:
+            TF_IN_AUTOMATION: true
+        steps:
+            - uses: actions/checkout@v5
+            - name: configure aws credentials
+              uses: aws-actions/configure-aws-credentials@v5.1.1
+              with:
+                role-to-assume: arn:aws:iam::${{ inputs.AWS_ACCOUNT_ID }}:role/github_actions_oidc
+                role-session-name: GHA_TF_DESTROY
+                aws-region: eu-central-1
+            - uses: hashicorp/setup-terraform@v3
+
+            - name: Terraform Init
+              run: terraform init -input=false
+
+            - name: Terraform Validate
+              run: terraform validate
+
+            - name: Terraform Select Workspace
+              run: |
+                terraform workspace select ${{ inputs.WORKSPACE_NAME }}
+            - name: Terraform Destroy
+              run: terraform destroy -var="name=${{ inputs.WORKSPACE_NAME }}" -lock=true -lock-timeout=5m -auto-approve -input=false
