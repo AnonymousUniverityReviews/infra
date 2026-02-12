@@ -70,8 +70,10 @@ resource "aws_iam_role" "oidc" {
 }
 
 resource "aws_iam_policy" "external_secrets_access_policy" {
-  name   = "external_secrets_access_policy"
-  policy = file(var.external_secrets_access_policy_path)
+  name = "external_secrets_access_policy"
+  policy = templatefile(var.external_secrets_access_policy_path, {
+    "secret_arn" : var.cloudflare_api_key_secret_arn
+  })
 }
 
 resource "aws_iam_role" "external_secrets_pod_identity_role" {
