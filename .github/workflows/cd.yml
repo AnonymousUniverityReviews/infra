@@ -1,0 +1,40 @@
+name: cd
+
+on: 
+  workflow_call:
+        inputs:
+          WORKSPACE_NAME:
+            description: 'Workspace name'
+            required: true
+            type: string
+            default: 'default'
+          LAYER:
+            description: 'Layer name which have to be deployed (e.g. bootstrap, ops, app)'
+            type: string
+            default: bootstrap
+          AWS_ACCOUNT_ID:
+            required: true
+            type: string
+#  workflow_dispatch:
+
+permissions:
+  id-token: write
+
+jobs:
+  plan:
+    name: Terraform plan
+    uses: ./.github/workflows/terraform-plan.yml
+    with:
+      WORKSPACE_NAME: ${{ inputs.WORKSPACE_NAME }}
+      LAYER: ${{ inputs.LAYER }}
+      AWS_ACCOUNT_ID: ${{ inputs.AWS_ACCOUNT_ID }}
+
+  apply:
+    name: Terraform apply
+    if: ${{ needs.plan.outputs.plan_exitcode == '2' }} 
+    uses: ./.github/workflows/terraform-apply.yml
+    needs: [ "plan" ]
+    with:
+      WORKSPACE_NAME: ${{ inputs.WORKSPACE_NAME }}
+      LAYER: ${{ inputs.LAYER }}
+      AWS_ACCOUNT_ID: ${{ inputs.AWS_ACCOUNT_ID }}

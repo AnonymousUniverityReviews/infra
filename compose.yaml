@@ -1,0 +1,57 @@
+services:
+  app:
+    user: root
+    container_name: anonymousstudentreviews.api
+    build:
+      context: ./backend
+      dockerfile: src/AnonymousStudentReviews.Api/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${SSL_CERTIFICATE_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - EmailSecrets__EmailHashKey=${EmailSecrets__EmailHashKey}
+      - EmailSecrets__EmailVerificationTokenHashKey=${EmailSecrets__EmailVerificationTokenHashKey}
+      - Resend__Key=${Resend__Key}
+      - OpenIddictSecrets__ClientSecret=${OpenIddictSecrets__ClientSecret}
+    volumes:
+      - ${SSL_CERTIFICATE_FOLDER_PATH}:/https:ro
+      - dataprotection-keys:/app/keys
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17.5-alpine
+    container_name: anonymousstudentreviews.database
+    environment:
+      POSTGRES_DB: database
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5431:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  nuxt-app:
+    container_name: anonymousstudentreviews.frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    env_file:
+      - ./.env
+    environment:
+      - NUXT_HOST=0.0.0.0
+      - NUXT_PORT=8001
+      - NODE_ENV=development
+    restart: unless-stopped
+    depends_on:
+      - app
+
+volumes:
+  pgdata:
+  dataprotection-keys:
