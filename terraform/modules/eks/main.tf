@@ -77,10 +77,9 @@ resource "aws_iam_policy" "external_secrets_access_policy" {
 }
 
 resource "aws_iam_role" "external_secrets_pod_identity_role" {
-  name = "external_secrets_pod_identity_role"
-  assume_role_policy = templatefile(var.external_secrets_pod_identity_role_path, {
-  "secret_arn" : var.cloudflare_api_key_secret_arn })
-  tags = var.tags
+  name               = "external_secrets_pod_identity_role"
+  assume_role_policy = file(var.pod_identity_role_path)
+  tags               = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "external_secrets_pod_identity_role_attach" {
@@ -94,3 +93,27 @@ resource "aws_eks_pod_identity_association" "external_secrets_pod_identity_assoc
   service_account = "external-secrets"
   role_arn        = aws_iam_role.external_secrets_pod_identity_role.arn
 }
+
+resource "aws_iam_policy" "awslbc_policy" {
+  name   = "AWSLoadBalancerControllerIAMPolicy"
+  policy = file(var.awslbc_policy_path)
+}
+
+resource "aws_iam_role" "awslbc_policy_role" {
+  name               = "awslbc_role"
+  assume_role_policy = file(var.pod_identity_role_path)
+  tags               = var.tags
+}
+
+resource "aws_iam_role_policy_attachment" "awslbc_policy_role_attach" {
+  role       = aws_iam_role.awslbc_policy_role.name
+  policy_arn = aws_iam_policy.awslbc_policy.arn
+}
+
+resource "aws_eks_pod_identity_association" "awslbc_policy_role_association" {
+  cluster_name    = aws_eks_cluster.eks.name
+  namespace       = "kube-system"
+  service_account = "aws-load-balancer-controller"
+  role_arn        = aws_iam_role.awslbc_policy_role.arn
+}
+

@@ -23,7 +23,7 @@ variable "external_secrets_access_policy_path" {
   type = string
 }
 
-variable "external_secrets_pod_identity_role_path" {
+variable "pod_identity_role_path" {
   type = string
 }
 
@@ -34,4 +34,8 @@ variable "cloudflare_api_key_secret_arn" {
 variable "name" {
   type    = string
   default = "eks"
+}
+
+variable "awslbc_policy_path" {
+  type = string
 }
