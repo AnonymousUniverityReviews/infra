@@ -1,6 +1,8 @@
 [submodule "backend"]
 	path = backend
 	url = https://github.com/AnonymousUniverityReviews/backend.git
+	branch = dev
 [submodule "frontend"]
 	path = frontend
 	url = https://github.com/AnonymousUniverityReviews/frontend.git
+	branch = dev
