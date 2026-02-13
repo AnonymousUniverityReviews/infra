@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  destination:
+    namespace: 'external-dns'
+    server: https://kubernetes.default.svc
+  project: default
+  sources:
+    - repoURL: 'https://kubernetes-sigs.github.io/external-dns/'
+      chart: external-dns
+      targetRevision: 0.20.0
+      helm:
+        valueFiles:
+          - $values/helm-values/external-dns-values.yml
+    - repoURL: 'https://github.com/AnonymousUniverityReviews/infra.git'
+      targetRevision: infra
+      ref: values
+  syncPolicy:
+    automated:
+      enabled: true
+    syncOptions:
+      - CreateNamespace=true
