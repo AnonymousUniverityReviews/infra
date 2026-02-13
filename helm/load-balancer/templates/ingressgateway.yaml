@@ -3,7 +3,7 @@ kind: IngressGateway
 metadata:
   name: ingress-gateway
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: monukoni.site
+    external-dns.alpha.kubernetes.io/hostname: {{ .Values.domain }}
   namespace: default
 spec:
   listeners:
