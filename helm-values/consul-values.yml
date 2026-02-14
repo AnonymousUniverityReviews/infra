@@ -33,7 +33,7 @@ ingressGateways:
   gateways:
     - name: ingress-gateway
       service:
-        type: LoadBalancer
+        type: NodePort
   defaults:
     service:
       ports:
