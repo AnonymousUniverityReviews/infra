@@ -1,25 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: awslbcontroller
+  name: awslbcontrollerCRD
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
-    namespace: 'kube-system'
+    namespace: 'default'
     server: https://kubernetes.default.svc
   project: default
   sources:
-    - repoURL: 'https://aws.github.io/eks-charts'
-      chart: aws-load-balancer-controller
-      targetRevision: 3.0.0
-      helm:
-        valueFiles:
-          - $values/helm-values/awslbcontroller.yaml
     - repoURL: 'https://github.com/AnonymousUniverityReviews/infra.git'
       targetRevision: infra
-      ref: values
+      path: kubernetes/awslbcontroller/crd
   syncPolicy:
     automated:
       enabled: true
