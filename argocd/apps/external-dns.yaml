@@ -22,7 +22,7 @@ spec:
       ref: values
     - repoURL: 'https://github.com/AnonymousUniverityReviews/infra.git'
       targetRevision: infra
-      path: kubernetes/secretstorecf.yaml
+      path: kubernetes/secretstore
   syncPolicy:
     automated:
       enabled: true
