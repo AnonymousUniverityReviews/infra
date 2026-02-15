@@ -7,13 +7,13 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
 spec:
   destination:
-    namespace: 'default'
+    namespace: 'kube-system'
     server: https://kubernetes.default.svc
   project: default
   sources:
-    - repoURL: https://github.com/AnonymousUniverityReviews/infra.git
-      targetRevision: infra
-      path: kubernetes/awslbcontroller/crd
+    # - repoURL: https://github.com/AnonymousUniverityReviews/infra.git
+    #   targetRevision: infra
+    #   path: kubernetes/awslbcontroller/crd
     - repoURL: 'https://aws.github.io/eks-charts'
       chart: aws-load-balancer-controller
       targetRevision: 3.0.0
@@ -23,9 +23,6 @@ spec:
     - repoURL: 'https://github.com/AnonymousUniverityReviews/infra.git'
       targetRevision: infra
       ref: values
-    - repoURL: 'https://github.com/AnonymousUniverityReviews/infra.git'
-      targetRevision: infra
-      path: kubernetes/awslbcontroller
   syncPolicy:
     automated:
       enabled: true
