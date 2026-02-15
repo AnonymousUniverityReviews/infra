@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: awslbcontroller
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  destination:
+    namespace: 'default'
+    server: https://kubernetes.default.svc
+  project: default
+  sources:
+    - repoURL: 'https://github.com/kubernetes-sigs/gateway-api.git'
+      targetRevision: main
+      path: config/crd/experimental/gateway.networking.k8s.io_gateways.yaml
+    - repoURL: 'https://github.com/aws/eks-charts.git'
+      targetRevision: master
+      path: stable/aws-load-balancer-controller/crds/crds.yaml
+    - repoURL: 'https://aws.github.io/eks-charts'
+      chart: aws-load-balancer-controller
+      targetRevision: 3.0.0
+      helm:
+        valueFiles:
+          - $values/helm-values/awslbcontroller.yaml
+    - repoURL: 'https://github.com/AnonymousUniverityReviews/infra.git'
+      targetRevision: infra
+      ref: values
+    - repoURL: 'https://github.com/AnonymousUniverityReviews/infra.git'
+      targetRevision: infra
+      path: kubernetes/aws_lb.yaml
+  syncPolicy:
+    automated:
+      enabled: true
+    syncOptions:
+      - CreateNamespace=true

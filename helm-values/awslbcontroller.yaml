@@ -1,0 +1,16 @@
+clusterName: default-eks
+controllerConfig:
+  featureGates:
+    ALBGatewayAPI: true
+enableServiceMutatorWebhook: false
+image:
+  tag: v3.0.0
+podDisruptionBudget:
+  minAvailable: 1
+podMutatorWebhookConfig:
+  failurePolicy: Fail
+serviceAccount:
+  create: true
+  name: aws-load-balancer-controller
+vpcId: vpc-0b9123667d2893c9b
+region: eu-central-1

@@ -48,7 +48,7 @@ resource "aws_eks_access_policy_association" "gha_tf_eks_admin" {
   }
 }
 
-
+# TODO: remove this if not needed
 resource "kubernetes_annotations" "gp2_default" {
   api_version = "storage.k8s.io/v1"
   kind        = "StorageClass"
