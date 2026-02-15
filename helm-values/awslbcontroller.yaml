@@ -14,3 +14,4 @@ serviceAccount:
   name: aws-load-balancer-controller
 vpcId: vpc-0b9123667d2893c9b
 region: eu-central-1
+installCRDs: false
