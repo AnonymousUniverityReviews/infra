@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-lb
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  destination:
+    namespace: 'default'
+    server: https://kubernetes.default.svc
+  project: default
+  sources:
+    - repoURL: 'https://github.com/AnonymousUniverityReviews/infra.git'
+      targetRevision: infra
+      path: kubernetes/awslbcontroller
+  syncPolicy:
+    automated:
+      enabled: true
+    syncOptions:
+      - CreateNamespace=true
