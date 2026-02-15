@@ -1,3 +1,3 @@
 resources:
-  - https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/refs/heads/main/config/crd/experimental/gateway.networking.k8s.io_gateways.yaml
-#   - https://raw.githubusercontent.com/aws/eks-charts/refs/heads/master/stable/aws-load-balancer-controller/crds/crds.yaml
+  - https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.1.0/experimental-install.yaml
+  - https://raw.githubusercontent.com/aws/eks-charts/refs/heads/master/stable/aws-load-balancer-controller/crds/crds.yaml
