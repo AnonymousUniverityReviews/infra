@@ -6,3 +6,8 @@ env:
       secretKeyRef:
         name: cloudflare-api-key
         key: cloudflare-api-key
+
+sources:
+  - service
+  - ingress
+  - gateway-httproute
