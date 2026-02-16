@@ -10,6 +10,8 @@ kind: Gateway
 metadata:
   name: alb
   namespace: app
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:eu-central-1:585517712585:certificate/f0af1a98-33a0-4b89-8ea2-c3830ea73eb0"
 spec:
   gatewayClassName: alb
   infrastructure:
@@ -21,6 +23,20 @@ spec:
   - name: http
     port: 80
     protocol: HTTP
+    hostname: "studentus.tech"
+    allowedRoutes:
+      namespaces:
+        from: All
+  - name: https
+    port: 443
+    protocol: HTTPS
+    hostname: "studentus.tech"
+    tls:             
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: tls-secret-placeholder
     allowedRoutes:
       namespaces:
         from: All
@@ -45,6 +61,7 @@ metadata:
 spec:
   parentRefs:
   - name: alb
+    sectionName: https
   rules:
   - matches:
     - path:
@@ -54,6 +71,23 @@ spec:
     - name: consul-ingress-gateway
       namespace: consul
       port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: http-to-https-redirect
+  namespace: app
+spec:
+  parentRefs:
+  - name: alb
+    sectionName: http
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        port: 443
+        statusCode: 301
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
