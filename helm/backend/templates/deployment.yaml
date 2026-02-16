@@ -44,3 +44,15 @@ spec:
               cpu: {{ .Values.container.resources.requests.cpu | quote }}
             limits:
               cpu: {{ .Values.container.resources.limits.cpu | quote }}
+          env:
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.secretEnv }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $value | quote }}
+                  key: {{ $value | quote }}
+            {{- end }}

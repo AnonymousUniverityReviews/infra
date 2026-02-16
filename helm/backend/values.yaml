@@ -37,3 +37,12 @@ container:
     limits:
       cpu: "250m"
 
+env: {
+  ASPNETCORE_URLS: "https://+:443;http://+:80",
+  HealthCheck__RequireHost: ""
+}
+secretEnv: {
+  EmailSecrets__EmailHashKey: "backend-email-secrets-hash-key",
+  EmailSecrets__EmailVerificationTokenHashKey: "backend-email-verification-token-hash-key",
+  Resend__Key: "backend-resend-key"
+}
