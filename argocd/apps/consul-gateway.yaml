@@ -1,16 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: load-balancer
+  name: consul-gateway
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
 spec:
   destination:
-    namespace: 'app'
+    namespace: 'default'
     server: https://kubernetes.default.svc
   source:
-    path: helm/load-balancer
+    path: helm/consul-gateway
     repoURL: https://github.com/AnonymousUniverityReviews/infra.git
     targetRevision: infra
     helm:
