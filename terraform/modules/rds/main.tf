@@ -16,4 +16,5 @@ resource "aws_db_instance" "studentus_db" {
   storage_encrypted           = true
   publicly_accessible         = false
   db_subnet_group_name        = aws_db_subnet_group.studentus_db.name
+  skip_final_snapshot         = true
 }
