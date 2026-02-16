@@ -4,6 +4,11 @@ module "iam" {
   tags   = var.tags
 }
 
+module "rds" {
+  source = "../../modules/rds"
+  subnets = data.terraform_remote_state.bootstrap.outputs.eks_private_subnets[*].id
+}
+
 module "eks" {
   source                              = "../../modules/eks"
   name                                = var.name
@@ -48,7 +53,7 @@ resource "aws_eks_access_policy_association" "gha_tf_eks_admin" {
   }
 }
 
-# TODO: remove this if not needed
+# used by consul to create secrets
 resource "kubernetes_annotations" "gp2_default" {
   api_version = "storage.k8s.io/v1"
   kind        = "StorageClass"
