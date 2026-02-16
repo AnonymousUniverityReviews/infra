@@ -39,3 +39,18 @@ resource "aws_secretsmanager_secret" "cloudflare_api_key" {
   name        = "cloudflare_api_key"
   description = "Cloudflare API key to be used by external-dns to update the DNS records"
 }
+
+resource "aws_secretsmanager_secret" "backend_email_hash_key" {
+  name        = "backend/EmailSecrets/EmailHashKey"
+  description = "Backend email hash key"
+}
+
+resource "aws_secretsmanager_secret" "backend_email_verification_token_hash_key" {
+  name        = "backend/EmailSecrets/EmailVerificationTokenHashKey"
+  description = "Backend email verification token hash key"
+}
+
+resource "aws_secretsmanager_secret" "backend_resend_key" {
+  name        = "backend/ResendKey"
+  description = "Backend resend key"
+}
