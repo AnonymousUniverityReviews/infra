@@ -11,3 +11,5 @@ sources:
   - service
   - ingress
   - gateway-httproute
+
+txtOwnerId: default
