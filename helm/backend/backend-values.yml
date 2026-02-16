@@ -1,6 +1,6 @@
 container:
   image:
-    tag: dev-7ae08e7
+    tag: dev-6a0c828
 
 podAnnotations: {
   "consul.hashicorp.com/connect-inject": "true",
