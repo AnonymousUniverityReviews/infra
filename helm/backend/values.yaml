@@ -38,7 +38,7 @@ container:
       cpu: "250m"
 
 env: {
-  ASPNETCORE_URLS: "https://+:443;http://+:80",
+  ASPNETCORE_URLS: "http://+:80",
   HealthCheck__RequireHost: ""
 }
 secretEnv: {
