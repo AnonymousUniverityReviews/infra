@@ -18,6 +18,6 @@ resource "helm_release" "app_of_apps" {
 
   wait            = true
   cleanup_on_fail = true
-  timeouts        = 3600
+  timeout         = 3600
   depends_on      = [helm_release.argocd]
 }
