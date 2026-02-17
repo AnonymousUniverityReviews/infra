@@ -5,9 +5,9 @@ module "iam" {
 }
 
 module "rds" {
-  source  = "../../modules/rds"
-  name    = each.value.name
-  subnets = data.terraform_remote_state.bootstrap.outputs.eks_private_subnets[*].id
+  source   = "../../modules/rds"
+  name     = each.value.name
+  subnets  = data.terraform_remote_state.bootstrap.outputs.eks_private_subnets[*].id
   for_each = var.db_config
 }
 
@@ -65,5 +65,5 @@ resource "kubernetes_annotations" "gp2_default" {
   annotations = {
     "storageclass.kubernetes.io/is-default-class" = "true"
   }
-  depends_on = [module.eks]
+  depends_on = [module.eks, module.node_group]
 }
