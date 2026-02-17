@@ -77,6 +77,8 @@ kind: HTTPRoute
 metadata:
   name: http-to-https-redirect
   namespace: app
+  annotations:
+    external-dns.alpha.kubernetes.io/ignore: "true"
 spec:
   parentRefs:
   - name: alb
