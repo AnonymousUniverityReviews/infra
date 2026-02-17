@@ -60,9 +60,9 @@ resource "aws_secretsmanager_secret" "frontend_secrets" {
   description = "Frontend secrets"
 }
 
-resource "aws_secretsmanager_secret_value" "frontend_secrets" {
-  name = aws_secretsmanager_secret.frontend_secrets.name
-  secret_value = jsonencode({
+resource "aws_secretsmanager_secret_version" "frontend_secrets" {
+  secret_id = aws_secretsmanager_secret.frontend_secrets.id
+  secret_string = jsonencode({
     "NUXT_OIDC_PROVIDERS_OIDC_CLIENT_SECRET" : "",
     "NUXT_OIDC_TOKEN_KEY" : "",
     "NUXT_OIDC_SESSION_SECRET" : "",
