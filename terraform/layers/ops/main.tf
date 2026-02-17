@@ -5,8 +5,10 @@ module "iam" {
 }
 
 module "rds" {
-  source = "../../modules/rds"
+  source  = "../../modules/rds"
+  name    = each.value.name
   subnets = data.terraform_remote_state.bootstrap.outputs.eks_private_subnets[*].id
+  for_each = var.db_config
 }
 
 module "eks" {
