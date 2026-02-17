@@ -36,3 +36,9 @@ spec:
           image: {{ .Values.container.image.repository }}:{{ .Values.container.image.tag }}
           ports:
             - containerPort: {{ .Values.container.port }}
+          env:
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+
