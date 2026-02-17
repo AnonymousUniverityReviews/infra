@@ -10,11 +10,13 @@ spec:
           pathPrefix: /connect
       destination:
         service: backend
+        prefixRewrite: /connect
     - match:
         http:
           pathPrefix: /api
       destination:
         service: backend
+        prefixRewrite: /api
     - match:
         http:
           pathPrefix: /
