@@ -12,4 +12,7 @@ sources:
   - ingress
   - gateway-httproute
 
-txtOwnerId: default
+policy: sync
+registry: noop
+# registry: txt
+# --ignore-txt-owner-id
