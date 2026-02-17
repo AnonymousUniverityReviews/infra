@@ -54,3 +54,18 @@ resource "aws_secretsmanager_secret" "backend_resend_key" {
   name        = "backend/ResendKey"
   description = "Backend resend key"
 }
+
+resource "aws_secretsmanager_secret" "frontend_secrets" {
+  name        = "frontend/secrets"
+  description = "Frontend secrets"
+}
+
+resource "aws_secretsmanager_secret_value" "frontend_secrets" {
+  name = aws_secretsmanager_secret.frontend_secrets.name
+  secret_value = jsonencode({
+    "NUXT_OIDC_PROVIDERS_OIDC_CLIENT_SECRET" : "",
+    "NUXT_OIDC_TOKEN_KEY" : "",
+    "NUXT_OIDC_SESSION_SECRET" : "",
+    "NUXT_OIDC_AUTH_SESSION_SECRET" : ""
+  })
+}

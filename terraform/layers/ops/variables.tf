@@ -24,15 +24,3 @@ variable "admin_user" {
 variable "github_actions_oidc_role_name" {
   default = "github_actions_oidc"
 }
-
-variable "db_config" {
-  type = map(any)
-  default = {
-    studentus_db = {
-      name = "studentus_db"
-    },
-    backend_data_protection_db = {
-      name = "backend_data_protection_db"
-    }
-  }
-}
