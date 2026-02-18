@@ -39,6 +39,14 @@ resource "aws_ecr_repository" "backend" {
   }
 }
 
+resource "aws_ecr_repository" "dbmigrations" {
+  name                 = "dbmigrations"
+  image_tag_mutability = "MUTABLE"
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
 resource "aws_secretsmanager_secret" "cloudflare_api_key" {
   name        = "cloudflare_api_key"
   description = "Cloudflare API key to be used by external-dns to update the DNS records"
