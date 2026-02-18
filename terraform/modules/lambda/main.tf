@@ -22,10 +22,10 @@ data "archive_file" "function" {
   output_path = "${path.module}/function.zip"
 }
 resource "aws_lambda_function" "function" {
-  filename      = data.archive_file.function.output_path
-  function_name = var.name
-  role          = aws_iam_role.role.arn
-  handler       = var.handler
-  code_sha256   = data.archive_file.function.output_base64sha256
-  runtime       = var.runtime
+  filename         = data.archive_file.function.output_path
+  function_name    = var.name
+  role             = aws_iam_role.role.arn
+  handler          = var.handler
+  source_code_hash = data.archive_file.function.output_base64sha256
+  runtime          = var.runtime
 }
