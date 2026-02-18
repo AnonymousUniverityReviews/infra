@@ -29,7 +29,7 @@ resource "null_resource" "install_dependencies" {
 
 data "archive_file" "function" {
   type        = "zip"
-  source_file = var.source_file
+  source_dir  = var.source_file
   output_path = "${var.name}.zip"
   depends_on  = [null_resource.install_dependencies]
 }
