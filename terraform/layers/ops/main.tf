@@ -16,14 +16,14 @@ module "backend_data_protection_db" {
   subnets = data.terraform_remote_state.bootstrap.outputs.eks_private_subnets[*].id
 }
 
-# module "migration_lambda" {
-#   source      = "../../modules/lambda"
-#   name        = "dbmigrations"
-#   role_name   = "lambda_dbmigrations_lambda_role"
-#   runtime     = "python3.14"
-#   handler     = "main.handler"
-#   source_file = "../../../lambda/dbmigrations/main.py"
-# }
+module "migration_lambda" {
+  source      = "../../modules/lambda"
+  name        = "dbmigrations"
+  role_name   = "lambda_dbmigrations_lambda_role"
+  runtime     = "python3.14"
+  handler     = "main.handler"
+  source_file = "../../../lambda/dbmigrations/main.py"
+}
 
 module "eks" {
   source                              = "../../modules/eks"
