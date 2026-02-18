@@ -4,6 +4,10 @@ resource "aws_s3_bucket" "backend_bucket" {
   object_lock_enabled = true
 }
 
+resource "aws_s3_bucket" "migration_bucket" {
+  bucket = "anonymous-university-migration-bucket"
+}
+
 module "gh_oidc" {
   source                    = "../../modules/gh_oidc"
   oidc_gha_role_policy_path = "../../policies/oidc_gha_role_policy.json"
