@@ -22,12 +22,12 @@ resource "aws_lambda_function" "example" {
   package_type  = "Image"
   image_uri     = "585517712585.dkr.ecr.eu-central-1.amazonaws.com/dbmigrations:latest"
 
-#   image_config {
-#     command = ["main.handler"]
-#   }
+  #   image_config {
+  #     command = ["main.handler"]
+  #   }
 
   memory_size = 512
   timeout     = 30
 
-  architectures = ["x86_64"]
+  architectures = ["arm64"]
 }
