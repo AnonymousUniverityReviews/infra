@@ -19,7 +19,7 @@ resource "aws_iam_role" "role" {
 data "archive_file" "function" {
   type        = "zip"
   source_file = var.source_file
-  output_path = "${path.module}/function.zip"
+  output_path = "${var.name}.zip"
 }
 resource "aws_lambda_function" "function" {
   filename         = data.archive_file.function.output_path
