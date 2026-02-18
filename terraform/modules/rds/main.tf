@@ -6,7 +6,7 @@ resource "aws_db_subnet_group" "db" {
 resource "aws_db_instance" "db" {
   allocated_storage                   = 10
   identifier                          = var.name
-  db_name                             = var.name
+  db_name                             = replace(title(var.name), "-", "")
   engine                              = "postgres"
   engine_version                      = "17.6"
   instance_class                      = "db.t4g.micro"
