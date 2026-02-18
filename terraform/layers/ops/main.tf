@@ -6,15 +6,24 @@ module "iam" {
 
 module "studentus_db" {
   source  = "../../modules/rds"
-  name    = "studentus_db"
+  name    = "studentus-db"
   subnets = data.terraform_remote_state.bootstrap.outputs.eks_private_subnets[*].id
 }
 
 module "backend_data_protection_db" {
   source  = "../../modules/rds"
-  name    = "backend_data_protection_db"
+  name    = "backend-data-protection-db"
   subnets = data.terraform_remote_state.bootstrap.outputs.eks_private_subnets[*].id
 }
+
+# module "migration_lambda" {
+#   source      = "../../modules/lambda"
+#   name        = "dbmigrations"
+#   role_name   = "lambda_dbmigrations_lambda_role"
+#   runtime     = "python3.14"
+#   handler     = "main.handler"
+#   source_file = "../../../lambda/dbmigrations/main.py"
+# }
 
 module "eks" {
   source                              = "../../modules/eks"
