@@ -1,5 +1,5 @@
 resource "aws_db_subnet_group" "db" {
-  name       = lower(var.name)
+  name       = var.name
   subnet_ids = var.subnets
 }
 

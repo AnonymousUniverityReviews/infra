@@ -6,13 +6,13 @@ module "iam" {
 
 module "studentus_db" {
   source  = "../../modules/rds"
-  name    = "studentusDb"
+  name    = "studentus-db"
   subnets = data.terraform_remote_state.bootstrap.outputs.eks_private_subnets[*].id
 }
 
 module "backend_data_protection_db" {
   source  = "../../modules/rds"
-  name    = "backendDataProtectionDb"
+  name    = "backend-data-protection-db"
   subnets = data.terraform_remote_state.bootstrap.outputs.eks_private_subnets[*].id
 }
 
