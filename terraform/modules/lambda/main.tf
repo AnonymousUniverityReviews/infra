@@ -20,6 +20,9 @@ resource "null_resource" "install_dependencies" {
   provisioner "local-exec" {
     command = "pip install -r ${var.source_file}/requirements.txt -t ${var.source_file}/package"
   }
+  triggers = {
+    always_run = timestamp()
+  }
 }
 
 data "archive_file" "function" {
