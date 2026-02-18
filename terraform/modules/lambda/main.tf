@@ -19,11 +19,6 @@ resource "aws_iam_role" "role" {
 resource "null_resource" "install_dependencies" {
   provisioner "local-exec" {
     command = "pip install -r ${var.source_file}/requirements.txt -t ${var.source_file}/package"
-
-  }
-
-  triggers = {
-    dependencies_hash = filemd5("${var.source_file}/requirements.txt")
   }
 }
 
