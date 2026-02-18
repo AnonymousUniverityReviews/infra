@@ -46,3 +46,7 @@ secretEnv: {
   EmailSecrets__EmailVerificationTokenHashKey: "backend-email-verification-token-hash-key",
   Resend__Key: "backend-resend-key"
 }
+
+envFromSecrets:
+  - "backend-database-connections-main-database"
+  - "backend-database-connections-data-protection-database"

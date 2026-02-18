@@ -39,14 +39,6 @@ resource "aws_ecr_repository" "backend" {
   }
 }
 
-resource "aws_ecr_repository" "dbmigrations" {
-  name                 = "dbmigrations"
-  image_tag_mutability = "MUTABLE"
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
-
 resource "aws_secretsmanager_secret" "cloudflare_api_key" {
   name        = "cloudflare_api_key"
   description = "Cloudflare API key to be used by external-dns to update the DNS records"
@@ -79,5 +71,37 @@ resource "aws_secretsmanager_secret_version" "frontend_secrets" {
     "NUXT_OIDC_TOKEN_KEY" : "",
     "NUXT_OIDC_SESSION_SECRET" : "",
     "NUXT_OIDC_AUTH_SESSION_SECRET" : ""
+  })
+}
+
+resource "aws_secretsmanager_secret" "main_database" {
+  name        = "backend/DatabaseConnections/MainDatabase"
+  description = "Main Database connection secrets"
+}
+
+resource "aws_secretsmanager_secret_version" "main_database" {
+  secret_id = aws_secretsmanager_secret.main_database.id
+  secret_string = jsonencode({
+    "DatabaseConnections__MainDatabase__Host" : "",
+    "DatabaseConnections__MainDatabase__Port" : "",
+    "DatabaseConnections__MainDatabase__Database" : "",
+    "DatabaseConnections__MainDatabase__Username" : "",
+    "DatabaseConnections__MainDatabase__Password" : ""
+  })
+}
+
+resource "aws_secretsmanager_secret" "data_protection_database" {
+  name        = "backend/DatabaseConnections/DataProtectionDatabase"
+  description = "Data Protection Database connection secrets"
+}
+
+resource "aws_secretsmanager_secret_version" "data_protection_database" {
+  secret_id = aws_secretsmanager_secret.data_protection_database.id
+  secret_string = jsonencode({
+    "DatabaseConnections__DataProtectionDatabase__Host" : "",
+    "DatabaseConnections__DataProtectionDatabase__Port" : "",
+    "DatabaseConnections__DataProtectionDatabase__Database" : "",
+    "DatabaseConnections__DataProtectionDatabase__Username" : "",
+    "DatabaseConnections__DataProtectionDatabase__Password" : ""
   })
 }
