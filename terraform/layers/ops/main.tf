@@ -20,7 +20,7 @@ module "migration_lambda" {
   source      = "../../modules/lambda"
   name        = "dbmigrations"
   role_name   = "lambda_dbmigrations_lambda_role"
-  runtime     = "python3.14"
+  runtime     = "python3.13"
   handler     = "main.handler"
   source_file = "../../../lambda/dbmigrations/main.py"
 }
