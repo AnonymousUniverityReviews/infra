@@ -105,3 +105,31 @@ resource "aws_secretsmanager_secret_version" "data_protection_database" {
     "DatabaseConnections__DataProtectionDatabase__Password" : ""
   })
 }
+
+resource "aws_secretsmanager_secret" "openiddict_certificates_meta" {
+  name        = "backend/OpenIdDictCertificatesMeta"
+  description = "OpenIdDict certificates secrets"
+}
+
+resource "aws_secretsmanager_secret_version" "openiddict_certificates_meta" {
+  secret_id = aws_secretsmanager_secret.openiddict_certificates_meta.id
+  secret_string = jsonencode({
+    "OPENIDDICT_ENCRYPTION_CERTIFICATE_FILE_CONTAINER_PATH" : "",
+    "OPENIDDICT_SIGNING_CERTIFICATE_FILE_CONTAINER_PATH" : "",
+    "OPENIDDICT_ENCRYPTION_CERTIFICATE_PASSWORD" : "",
+    "OPENIDDICT_SIGNING_CERTIFICATE_PASSWORD" : ""
+  })
+}
+
+resource "aws_secretsmanager_secret" "openiddict_certificates" {
+  name        = "backend/OpenIdDictCertificates"
+  description = "OpenIdDict certificates secrets"
+}
+
+resource "aws_secretsmanager_secret_version" "openiddict_certificates" {
+  secret_id = aws_secretsmanager_secret.openiddict_certificates.id
+  secret_string = jsonencode({
+    "server-encryption-certificate" : "",
+    "server-signing-certificate" : ""
+  })
+}
