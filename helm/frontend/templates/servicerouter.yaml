@@ -19,6 +19,18 @@ spec:
         prefixRewrite: /api
     - match:
         http:
+          pathPrefix: /js
+      destination:
+        service: backend
+        prefixRewrite: /js
+    - match:
+        http:
+          pathPrefix: /css
+      destination:
+        service: backend
+        prefixRewrite: /css
+    - match:
+        http:
           pathPrefix: /
       destination:
         service: {{ .Values.service.name }}
