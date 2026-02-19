@@ -1,6 +1,6 @@
 container:
   image:
-    tag: email-sending-config-c6a2c9d
+    tag: dev-483de57
 
 podAnnotations: {
   "consul.hashicorp.com/connect-inject": "true",

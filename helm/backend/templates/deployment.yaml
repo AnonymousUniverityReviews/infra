@@ -44,6 +44,14 @@ spec:
               cpu: {{ .Values.container.resources.requests.cpu | quote }}
             limits:
               cpu: {{ .Values.container.resources.limits.cpu | quote }}
+          {{- if .Values.secretVolumes }}
+          volumeMounts:
+            {{- range .Values.secretVolumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              readOnly: true
+            {{- end }}
+          {{- end }}
           env:
             {{- range $key, $value := .Values.env }}
             - name: {{ $key }}
@@ -63,3 +71,11 @@ spec:
                 name: {{ . }}
             {{- end }}
           {{- end }}
+      {{- if .Values.secretVolumes }}
+      volumes:
+        {{- range .Values.secretVolumes }}
+        - name: {{ .name }}
+          secret:
+            secretName: {{ .secretName }}
+        {{- end }}
+      {{- end }}

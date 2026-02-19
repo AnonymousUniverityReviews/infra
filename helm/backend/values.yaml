@@ -1,6 +1,6 @@
 appName: "backend"
 
-replicaCount: 3
+replicaCount: 1
 
 serviceAccount:
   name: "backend"
@@ -50,3 +50,9 @@ secretEnv: {
 envFromSecrets:
   - "backend-database-connections-main-database"
   - "backend-database-connections-data-protection-database"
+  - "backend-openiddict-certificates-meta"
+
+secretVolumes:
+  - name: "backend-openiddict-certificates"
+    secretName: "backend-openiddict-certificates"
+    mountPath: "/encryption_certs"
