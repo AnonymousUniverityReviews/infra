@@ -24,3 +24,8 @@ variable "tags" {
     "version" : "v1"
   }
 }
+
+variable "domain" {
+  type    = string
+  default = "studentus.tech"
+}
