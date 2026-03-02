@@ -4,7 +4,7 @@ description: 'Runs terraform plan for a specific layer'
 inputs:
   workspace_name:
     description: 'Workspace name'
-    required: true
+    required: false
     default: 'default'
   layer:
     description: 'Layer name which have to be deployed (e.g. bootstrap, ops, app)'
