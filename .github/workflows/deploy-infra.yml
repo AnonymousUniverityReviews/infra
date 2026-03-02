@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy infra
 run-name: Deploy infrastructure to ${{ inputs.environment }} environment
 
 on:
@@ -24,7 +24,8 @@ jobs:
     name: Deploy bootstrap layer
     if: ${{ inputs.layer == 'bootstrap' || inputs.layer == 'all' }}
     uses: ./.github/workflows/actions/terraform-plan-apply.yml
-    secrets: inherit
+    secrets:
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
     with:
       layer: bootstrap
 
@@ -33,7 +34,8 @@ jobs:
     needs: [bootstrap]
     if: ${{ always() && !failure() && !cancelled() && (inputs.layer == 'ops' || inputs.layer == 'all') }}
     uses: ./.github/workflows/actions/terraform-plan-apply.yml
-    secrets: inherit
+    secrets:
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
     with:
       layer: ops
 
@@ -43,7 +45,8 @@ jobs:
     needs: [ops]
     if: ${{ always() && !failure() && !cancelled() && (inputs.layer == 'app' || inputs.layer == 'all') }}
     uses: ./.github/workflows/actions/terraform-plan-apply.yml
-    secrets: inherit
+    secrets:
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
     with:
       layer: app
 
