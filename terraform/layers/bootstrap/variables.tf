@@ -1,6 +1,6 @@
 variable "gh_oidc_sub" {
   type    = string
-  default = "repo:AnonymousUniverityReviews/*:*"
+  default = "repo:StudentusReviews/*:*"
 }
 
 variable "region" {
