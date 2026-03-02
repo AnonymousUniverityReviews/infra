@@ -1,21 +1,20 @@
-name: cd
+name: Plan and Apply
 
 on: 
   workflow_call:
         inputs:
-          WORKSPACE_NAME:
+          workspace_name:
             description: 'Workspace name'
             required: true
             type: string
             default: 'default'
-          LAYER:
+          layer:
             description: 'Layer name which have to be deployed (e.g. bootstrap, ops, app)'
             type: string
             default: bootstrap
-          AWS_ACCOUNT_ID:
+        secrets:
+          AWS_ACCOUNT_ID: 
             required: true
-            type: string
-#  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -23,18 +22,18 @@ permissions:
 jobs:
   plan:
     name: Terraform plan
-    uses: ./.github/workflows/terraform-plan.yml
+    uses: ./.github/workflows/actions/terraform-plan.yml
+    secrets: inherit
     with:
-      WORKSPACE_NAME: ${{ inputs.WORKSPACE_NAME }}
-      LAYER: ${{ inputs.LAYER }}
-      AWS_ACCOUNT_ID: ${{ inputs.AWS_ACCOUNT_ID }}
+      workspace_name: ${{ inputs.workspace_name }}
+      layer: ${{ inputs.layer }}
 
   apply:
     name: Terraform apply
     if: ${{ needs.plan.outputs.plan_exitcode == '2' }} 
-    uses: ./.github/workflows/terraform-apply.yml
+    uses: ./.github/workflows/actions/terraform-apply.yml
+    secrets: inherit
     needs: [ "plan" ]
     with:
-      WORKSPACE_NAME: ${{ inputs.WORKSPACE_NAME }}
-      LAYER: ${{ inputs.LAYER }}
-      AWS_ACCOUNT_ID: ${{ inputs.AWS_ACCOUNT_ID }}
+      workspace_name: ${{ inputs.workspace_name }}
+      layer: ${{ inputs.layer }}

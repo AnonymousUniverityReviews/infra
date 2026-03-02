@@ -3,18 +3,18 @@ name: terraform apply
 on:
   workflow_call:
     inputs:
-      WORKSPACE_NAME:
+      workspace_name:
         description: 'Workspace name'
         required: true
         type: string
         default: 'default'
-      LAYER:
+      layer:
         description: 'Layer name which have to be deployed (e.g. bootstrap, ops, app)'
         type: string
         default: bootstrap
+    secrets:
       AWS_ACCOUNT_ID:
         required: true
-        type: string
 
 permissions:
   id-token: write
@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./terraform/layers/${{ inputs.LAYER }}
+        working-directory: ./terraform/layers/${{ inputs.layer }}
     concurrency:
       group: terraform-state
       cancel-in-progress: false
@@ -36,14 +36,14 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v5.1.1
         with:
-          role-to-assume: arn:aws:iam::${{ inputs.AWS_ACCOUNT_ID }}:role/github_actions_oidc
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github_actions_oidc
           role-session-name: GHA_TF_APPLY
           aws-region: eu-central-1
       - uses: hashicorp/setup-terraform@v3
       - uses: actions/download-artifact@v5
         with:
-          name: terraform-plan-${{ inputs.WORKSPACE_NAME }}-${{ inputs.LAYER }}
-          path: ./terraform/layers/${{ inputs.LAYER }}
+          name: terraform-plan-${{ inputs.workspace_name }}-${{ inputs.layer }}
+          path: ./terraform/layers/${{ inputs.layer }}
 
       - name: Terraform Init
         run: terraform init -input=false
@@ -53,6 +53,6 @@ jobs:
 
       - name: Terraform workspace
         run: |
-          terraform workspace select ${{ inputs.WORKSPACE_NAME }}
+          terraform workspace select ${{ inputs.workspace_name }}
       - name: Terraform Apply
         run: terraform apply -lock=true -lock-timeout=5m -input=false tfplan
