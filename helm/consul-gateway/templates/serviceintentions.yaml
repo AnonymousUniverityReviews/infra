@@ -2,7 +2,6 @@ apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
     name: ingress-to-frontend
-    namespace: default
 spec:
     destination:
         name: frontend

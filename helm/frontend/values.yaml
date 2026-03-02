@@ -28,5 +28,20 @@ container:
   port: 80
   image:
     repository: 585517712585.dkr.ecr.eu-central-1.amazonaws.com/frontend
-    tag: latest
+    tag: dev-5b2efd4
 
+env:
+  PRIVATE_API_KEY: "1"
+  PRIVATE_API_BASE_URL: "http://backend/api"
+  NUXT_PUBLIC_API_BASE: "http://backend/api"
+  NUXT_OIDC_PROVIDERS_OIDC_CLIENT_ID: "frontend"  
+  NUXT_OIDC_PROVIDERS_OIDC_AUTHORIZATION_URL: "https://studentus.tech/connect/authorize"
+  NUXT_OIDC_PROVIDERS_OIDC_LOGOUT_URL: "https://studentus.tech/connect/logout"
+  NUXT_OIDC_PROVIDERS_OIDC_REDIRECT_URI: "https://studentus.tech/auth/oidc/callback"
+  NUXT_OIDC_PROVIDERS_OIDC_TOKEN_URL: "https://studentus.tech/connect/token"
+  NUXT_OIDC_PROVIDERS_OIDC_USER_INFO_URL: "https://studentus.tech/connect/userinfo"
+  NUXT_OIDC_AUTH_SERVER_ISSUER_URL: "https://studentus.tech"
+  NODE_ENV: "production"
+  NODE_TLS_REJECT_UNAUTHORIZED: "0"
+  NUXT_HOST: "0.0.0.0"
+  NUXT_PORT: "80"

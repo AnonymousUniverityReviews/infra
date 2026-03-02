@@ -1,24 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: external-secrets
+  name: external-lb
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "6"
   finalizers:
     - resources-finalizer.argocd.argoproj.io/foreground
 spec:
   destination:
-    namespace: 'external-secrets'
+    namespace: 'default'
     server: https://kubernetes.default.svc
   project: default
   sources:
-    - repoURL: 'https://charts.external-secrets.io'
-      chart: external-secrets
-      targetRevision: 2.0.0
+    - repoURL: 'https://github.com/AnonymousUniverityReviews/infra.git'
+      targetRevision: infra
+      path: kubernetes/awslbcontroller
   syncPolicy:
     automated:
       enabled: true
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true
