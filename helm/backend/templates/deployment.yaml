@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   namespace: app
+  annotations:
+    consul.hashicorp.com/connect-inject: "true"
   labels:
     {{- include "mychart.selectorLabels" . | indent 4 }}
     {{- with .Values.deploymentLabels }}
@@ -42,3 +44,38 @@ spec:
               cpu: {{ .Values.container.resources.requests.cpu | quote }}
             limits:
               cpu: {{ .Values.container.resources.limits.cpu | quote }}
+          {{- if .Values.secretVolumes }}
+          volumeMounts:
+            {{- range .Values.secretVolumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              readOnly: true
+            {{- end }}
+          {{- end }}
+          env:
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.secretEnv }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $value | quote }}
+                  key: {{ $value | quote }}
+            {{- end }}
+          {{- if .Values.envFromSecrets }}
+          envFrom:
+            {{- range .Values.envFromSecrets }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
+          {{- end }}
+      {{- if .Values.secretVolumes }}
+      volumes:
+        {{- range .Values.secretVolumes }}
+        - name: {{ .name }}
+          secret:
+            secretName: {{ .secretName }}
+        {{- end }}
+      {{- end }}

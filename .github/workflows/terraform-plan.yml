@@ -77,3 +77,4 @@ jobs:
           path: |
             ./terraform/layers/${{ inputs.LAYER }}/tfplan
             ./terraform/layers/${{ inputs.LAYER }}/tfplan.txt
+            ./terraform/layers/${{ inputs.LAYER }}/*.zip

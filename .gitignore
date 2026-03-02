@@ -3,4 +3,7 @@
 .idea
 *.tfvars
 golang
+lambda/
+terraform/modules/vpn/
+terraform/modules/lambda/
 .env

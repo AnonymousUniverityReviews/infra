@@ -4,6 +4,27 @@ module "iam" {
   tags   = var.tags
 }
 
+module "studentus_db" {
+  source  = "../../modules/rds"
+  name    = "studentus-db"
+  subnets = data.terraform_remote_state.bootstrap.outputs.eks_private_subnets[*].id
+}
+
+module "backend_data_protection_db" {
+  source  = "../../modules/rds"
+  name    = "backend-data-protection-db"
+  subnets = data.terraform_remote_state.bootstrap.outputs.eks_private_subnets[*].id
+}
+
+# module "migration_lambda" {
+#   source      = "../../modules/lambda"
+#   name        = "dbmigrations"
+#   role_name   = "lambda_dbmigrations_lambda_role"
+#   runtime     = "python3.13"
+#   handler     = "main.handler"
+#   source_file = "../../../lambda/dbmigrations"
+# }
+
 module "eks" {
   source                              = "../../modules/eks"
   name                                = var.name
@@ -48,7 +69,7 @@ resource "aws_eks_access_policy_association" "gha_tf_eks_admin" {
   }
 }
 
-
+# used by consul to create secrets
 resource "kubernetes_annotations" "gp2_default" {
   api_version = "storage.k8s.io/v1"
   kind        = "StorageClass"
@@ -58,5 +79,5 @@ resource "kubernetes_annotations" "gp2_default" {
   annotations = {
     "storageclass.kubernetes.io/is-default-class" = "true"
   }
-  depends_on = [module.eks]
+  depends_on = [module.eks, module.node_group]
 }

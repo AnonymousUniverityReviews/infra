@@ -33,12 +33,13 @@ ingressGateways:
   gateways:
     - name: ingress-gateway
       service:
-        type: LoadBalancer
+        type: NodePort
   defaults:
     service:
       ports:
         - port: 80
           targetPort: 80
+          nodePort: 30080
 
 client:
   grpc: true

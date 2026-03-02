@@ -1,4 +1,4 @@
-resource "aws_vpc" "eks_vpc" {
+resource "aws_vpc" "vpc" {
   cidr_block           = var.vpc_cidr
   instance_tenancy     = "default"
   enable_dns_hostnames = true
@@ -10,8 +10,8 @@ resource "aws_vpc" "eks_vpc" {
   )
 }
 
-resource "aws_subnet" "eks_private_subnets" {
-  vpc_id            = aws_vpc.eks_vpc.id
+resource "aws_subnet" "private_subnets" {
+  vpc_id            = aws_vpc.vpc.id
   cidr_block        = local.avz_cidrs[count.index]
   availability_zone = data.aws_availability_zones.avz.names[count.index]
 
@@ -23,8 +23,8 @@ resource "aws_subnet" "eks_private_subnets" {
   )
 }
 
-resource "aws_subnet" "eks_public_subnets" {
-  vpc_id            = aws_vpc.eks_vpc.id
+resource "aws_subnet" "public_subnets" {
+  vpc_id            = aws_vpc.vpc.id
   cidr_block        = local.avz_cidrs[count.index + var.az_count]
   availability_zone = data.aws_availability_zones.avz.names[count.index]
 
@@ -37,7 +37,7 @@ resource "aws_subnet" "eks_public_subnets" {
 }
 
 resource "aws_internet_gateway" "gw" {
-  vpc_id = aws_vpc.eks_vpc.id
+  vpc_id = aws_vpc.vpc.id
   tags = merge({
     "Name" : "${var.name}_igw" },
     var.tags
@@ -45,7 +45,7 @@ resource "aws_internet_gateway" "gw" {
 }
 
 resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.eks_vpc.id
+  vpc_id = aws_vpc.vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -58,11 +58,11 @@ resource "aws_route_table" "public" {
   )
 }
 
-resource "aws_route_table_association" "eks_public_subnets" {
-  subnet_id      = aws_subnet.eks_public_subnets[count.index].id
+resource "aws_route_table_association" "public_subnets" {
+  subnet_id      = aws_subnet.public_subnets[count.index].id
   route_table_id = aws_route_table.public.id
 
-  count = length(aws_subnet.eks_public_subnets)
+  count = length(aws_subnet.public_subnets)
 }
 
 resource "aws_eip" "nat" {
@@ -76,9 +76,9 @@ resource "aws_eip" "nat" {
   )
 }
 
-resource "aws_nat_gateway" "eks" {
+resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.eks_public_subnets[0].id
+  subnet_id     = aws_subnet.public_subnets[0].id
   depends_on    = [aws_internet_gateway.gw]
   tags = merge({
     "Name" : "${var.name}_nat" },
@@ -87,13 +87,13 @@ resource "aws_nat_gateway" "eks" {
 }
 
 resource "aws_route_table" "private" {
-  vpc_id = aws_vpc.eks_vpc.id
+  vpc_id = aws_vpc.vpc.id
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.eks.id
+    nat_gateway_id = aws_nat_gateway.nat.id
   }
-  count = length(aws_subnet.eks_private_subnets)
+  count = length(aws_subnet.private_subnets)
 
   tags = merge({
     "Name" : "${var.name}_rt${count.index}_private" },
@@ -102,9 +102,9 @@ resource "aws_route_table" "private" {
 }
 
 
-resource "aws_route_table_association" "eks_private_subnets" {
-  subnet_id      = aws_subnet.eks_private_subnets[count.index].id
+resource "aws_route_table_association" "private_subnets" {
+  subnet_id      = aws_subnet.private_subnets[count.index].id
   route_table_id = aws_route_table.private[count.index].id
 
-  count = length(aws_subnet.eks_private_subnets)
+  count = length(aws_subnet.private_subnets)
 }

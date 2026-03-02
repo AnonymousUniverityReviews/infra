@@ -1,0 +1,42 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceRouter
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: app
+spec:
+  routes:
+    - match:
+        http:
+          pathPrefix: /connect
+      destination:
+        service: backend
+        prefixRewrite: /connect
+    - match:
+        http:
+          pathPrefix: /api
+      destination:
+        service: backend
+        prefixRewrite: /api
+    - match:
+        http:
+          pathPrefix: /js
+      destination:
+        service: backend
+        prefixRewrite: /js
+    - match:
+        http:
+          pathPrefix: /css
+      destination:
+        service: backend
+        prefixRewrite: /css
+    - match:
+        http:
+          pathPrefix: /api/proxy
+      destination:
+        service: {{ .Values.service.name }}
+        prefixRewrite: /api/proxy
+    - match:
+        http:
+          pathPrefix: /
+      destination:
+        service: {{ .Values.service.name }}

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: consul
+  name: awslbcontroller
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "2"
@@ -9,16 +9,16 @@ metadata:
     - resources-finalizer.argocd.argoproj.io/foreground
 spec:
   destination:
-    namespace: 'consul'
+    namespace: 'kube-system'
     server: https://kubernetes.default.svc
   project: default
   sources:
-    - repoURL: 'https://helm.releases.hashicorp.com'
-      chart: consul
-      targetRevision: 1.9.2
+    - repoURL: 'https://aws.github.io/eks-charts'
+      chart: aws-load-balancer-controller
+      targetRevision: 3.0.0
       helm:
         valueFiles:
-          - $values/helm-values/consul-values.yml
+          - $values/helm-values/awslbcontroller.yaml
     - repoURL: 'https://github.com/AnonymousUniverityReviews/infra.git'
       targetRevision: infra
       ref: values

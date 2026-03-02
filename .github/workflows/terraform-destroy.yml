@@ -1,5 +1,5 @@
 name: terraform destroy
-
+run-name: ${{ github.actor }} - terraform destroy layer-${{ inputs.LAYER }} workspace-${{ inputs.WORKSPACE_NAME }}
 on: 
     workflow_call:
         inputs:

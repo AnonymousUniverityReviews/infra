@@ -4,6 +4,8 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   namespace: app
+  annotations:
+    consul.hashicorp.com/connect-inject: "true"
   labels:
     {{- include "mychart.selectorLabels" . | indent 4 }}
     {{- with .Values.deploymentLabels }}
@@ -34,3 +36,12 @@ spec:
           image: {{ .Values.container.image.repository }}:{{ .Values.container.image.tag }}
           ports:
             - containerPort: {{ .Values.container.port }}
+          env:
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          envFrom:
+            - secretRef:
+                name: frontend-secrets
+

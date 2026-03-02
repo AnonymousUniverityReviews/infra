@@ -10,3 +10,5 @@ spec:
   sources:
     - name: {{ .Values.service.name }}
       action: allow
+    - name: ingress-gateway
+      action: allow
