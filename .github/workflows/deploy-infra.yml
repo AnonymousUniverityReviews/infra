@@ -23,7 +23,7 @@ jobs:
   bootstrap:
     name: Deploy bootstrap layer
     if: ${{ inputs.layer == 'bootstrap' || inputs.layer == 'all' }}
-    uses: ./.github/workflows/actions/terraform-plan-apply.yml
+    uses: ./.github/workflows/terraform-plan-apply.yml
     secrets:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
     with:
@@ -33,7 +33,7 @@ jobs:
     name: Deploy ops layer
     needs: [bootstrap]
     if: ${{ always() && !failure() && !cancelled() && (inputs.layer == 'ops' || inputs.layer == 'all') }}
-    uses: ./.github/workflows/actions/terraform-plan-apply.yml
+    uses: ./.github/workflows/terraform-plan-apply.yml
     secrets:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
     with:
@@ -44,7 +44,7 @@ jobs:
     name: Deploy app layer
     needs: [ops]
     if: ${{ always() && !failure() && !cancelled() && (inputs.layer == 'app' || inputs.layer == 'all') }}
-    uses: ./.github/workflows/actions/terraform-plan-apply.yml
+    uses: ./.github/workflows/terraform-plan-apply.yml
     secrets:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
     with:

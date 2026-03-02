@@ -1,0 +1,49 @@
+name: Plan and Apply
+
+on: 
+  workflow_call:
+        inputs:
+          workspace_name:
+            description: 'Workspace name'
+            required: true
+            type: string
+            default: 'default'
+          layer:
+            description: 'Layer name which have to be deployed (e.g. bootstrap, ops, app)'
+            type: string
+            default: bootstrap
+        secrets:
+          AWS_ACCOUNT_ID: 
+            required: true
+
+permissions:
+  id-token: write
+
+jobs:
+  plan:
+    name: Terraform plan
+    runs-on: ubuntu-latest
+    outputs:
+      plan_exitcode: ${{ steps.plan.outputs.plan_exitcode }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: plan
+        uses: ./.github/actions/terraform-plan
+        with:
+          workspace_name: ${{ inputs.workspace_name }}
+          layer: ${{ inputs.layer }}
+          aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+
+  apply:
+    name: Terraform apply
+    needs: [plan]
+    if: ${{ needs.plan.outputs.plan_exitcode == '2' }} 
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/terraform-apply
+        with:
+          workspace_name: ${{ inputs.workspace_name }}
+          layer: ${{ inputs.layer }}
+          aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}

@@ -1,0 +1,61 @@
+name: 'terraform apply'
+description: 'Runs terraform apply for a specific layer'
+
+inputs:
+  workspace_name:
+    description: 'Workspace name'
+    required: true
+    default: 'default'
+  layer:
+    description: 'Layer name which have to be deployed (e.g. bootstrap, ops, app)'
+    required: true
+    default: 'bootstrap'
+  aws_account_id:
+    description: 'AWS Account ID for role assumption'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v5.1.1
+      with:
+        role-to-assume: arn:aws:iam::${{ inputs.aws_account_id }}:role/github_actions_oidc
+        role-session-name: GHA_TF_APPLY
+        aws-region: eu-central-1
+        
+    - uses: hashicorp/setup-terraform@v3
+
+    - uses: actions/download-artifact@v5
+      with:
+        name: terraform-plan-${{ inputs.workspace_name }}-${{ inputs.layer }}
+        path: ./terraform/layers/${{ inputs.layer }}
+
+    - name: Terraform Init
+      shell: bash
+      working-directory: ./terraform/layers/${{ inputs.layer }}
+      env:
+        TF_IN_AUTOMATION: "true"
+      run: terraform init -input=false
+
+    - name: Terraform Validate
+      shell: bash
+      working-directory: ./terraform/layers/${{ inputs.layer }}
+      env:
+        TF_IN_AUTOMATION: "true"
+      run: terraform validate
+
+    - name: Terraform workspace
+      shell: bash
+      working-directory: ./terraform/layers/${{ inputs.layer }}
+      env:
+        TF_IN_AUTOMATION: "true"
+      run: |
+        terraform workspace select ${{ inputs.workspace_name }}
+        
+    - name: Terraform Apply
+      shell: bash
+      working-directory: ./terraform/layers/${{ inputs.layer }}
+      env:
+        TF_IN_AUTOMATION: "true"
+      run: terraform apply -lock=true -lock-timeout=5m -input=false tfplan
