@@ -10,7 +10,7 @@ inputs:
     description: 'Layer name which have to be deployed (e.g. bootstrap, ops, app)'
     required: true
     default: 'bootstrap'
-  aws_account_id:
+  role_account_id:
     description: 'AWS Account ID for role assumption'
     required: true
 
@@ -20,7 +20,7 @@ runs:
     - name: configure aws credentials
       uses: aws-actions/configure-aws-credentials@v5.1.1
       with:
-        role-to-assume: arn:aws:iam::${{ inputs.aws_account_id }}:role/github_actions_oidc
+        role-to-assume: arn:aws:iam::${{ inputs.role_account_id }}:role/github_actions_oidc
         role-session-name: GHA_TF_APPLY
         aws-region: eu-central-1
         

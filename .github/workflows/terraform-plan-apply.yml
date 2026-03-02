@@ -32,7 +32,7 @@ jobs:
         with:
           workspace_name: ${{ inputs.workspace_name }}
           layer: ${{ inputs.layer }}
-          aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+          role_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
 
   apply:
     name: Terraform apply
@@ -46,4 +46,4 @@ jobs:
         with:
           workspace_name: ${{ inputs.workspace_name }}
           layer: ${{ inputs.layer }}
-          aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+          role_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
