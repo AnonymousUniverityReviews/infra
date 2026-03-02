@@ -31,6 +31,12 @@ spec:
         prefixRewrite: /css
     - match:
         http:
+          pathPrefix: /api/proxy
+      destination:
+        service: {{ .Values.service.name }}
+        prefixRewrite: /api/proxy
+    - match:
+        http:
           pathPrefix: /
       destination:
         service: {{ .Values.service.name }}

@@ -29,5 +29,5 @@ resource "aws_lambda_function" "example" {
   memory_size = 512
   timeout     = 30
 
-  architectures = ["arm64"]
+  architectures = ["amd64"]
 }
