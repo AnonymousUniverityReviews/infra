@@ -134,14 +134,14 @@ resource "aws_secretsmanager_secret_version" "openiddict_certificates" {
   })
 }
 
-module "vpn" {
-  source = "../../modules/vpn"
+# module "vpn" {
+#   source = "../../modules/vpn"
 
-  organization_name   = "Anonymous University Reviews"
-  country             = "UA"
-  vpn_domain          = "vpn.${var.domain}"
-  vpc_id              = module.networking.vpc_id
-  subnet_ids          = module.networking.private_subnet_ids
-  target_network_cidr = module.networking.vpc_cidr
-  tags                = var.tags
-}
+#   organization_name   = "Anonymous University Reviews"
+#   country             = "UA"
+#   vpn_domain          = "vpn.${var.domain}"
+#   vpc_id              = module.networking.vpc_id
+#   subnet_ids          = module.networking.private_subnet_ids
+#   target_network_cidr = module.networking.vpc_cidr
+#   tags                = var.tags
+# }
