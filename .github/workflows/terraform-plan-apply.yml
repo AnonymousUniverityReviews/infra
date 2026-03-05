@@ -3,11 +3,6 @@ name: Plan and Apply
 on: 
   workflow_call:
         inputs:
-          workspace_name:
-            description: 'Workspace name'
-            required: false
-            type: string
-            default: 'default'
           layer:
             description: 'Layer name which have to be deployed (e.g. bootstrap, ops, app)'
             type: string
@@ -31,7 +26,6 @@ jobs:
         name: Run Terraform Plan Action
         uses: ./.github/actions/terraform-plan
         with:
-          workspace_name: ${{ inputs.workspace_name }}
           layer: ${{ inputs.layer }}
           role_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
 
@@ -46,6 +40,5 @@ jobs:
       - name: Run Terraform Apply Action
         uses: ./.github/actions/terraform-apply
         with:
-          workspace_name: ${{ inputs.workspace_name }}
           layer: ${{ inputs.layer }}
           role_account_id: ${{ secrets.AWS_ACCOUNT_ID }}

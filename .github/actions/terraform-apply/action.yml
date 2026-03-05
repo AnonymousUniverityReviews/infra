@@ -2,10 +2,6 @@ name: 'terraform apply'
 description: 'Runs terraform apply for a specific layer'
 
 inputs:
-  workspace_name:
-    description: 'Workspace name'
-    required: false
-    default: 'default'
   layer:
     description: 'Layer name which have to be deployed (e.g. bootstrap, ops, app)'
     required: true
@@ -28,7 +24,7 @@ runs:
 
     - uses: actions/download-artifact@v5
       with:
-        name: terraform-plan-${{ inputs.workspace_name }}-${{ inputs.layer }}
+        name: terraform-plan-${{ inputs.layer }}
         path: ./terraform/layers/${{ inputs.layer }}
 
     - name: Terraform Init
@@ -45,14 +41,6 @@ runs:
         TF_IN_AUTOMATION: "true"
       run: terraform validate
 
-    - name: Terraform workspace
-      shell: bash
-      working-directory: ./terraform/layers/${{ inputs.layer }}
-      env:
-        TF_IN_AUTOMATION: "true"
-      run: |
-        terraform workspace select ${{ inputs.workspace_name }}
-        
     - name: Terraform Apply
       shell: bash
       working-directory: ./terraform/layers/${{ inputs.layer }}

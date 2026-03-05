@@ -1,24 +1,14 @@
 name: Destroy infra
-run-name: ${{ github.actor }} - terraform destroy layer-${{ inputs.layer }} workspace-${{ inputs.workspace_name }}
+run-name: ${{ github.actor }} - terraform destroy layer-${{ inputs.layer }}
 on: 
     workflow_call:
         inputs:
-          workspace_name:
-            description: 'Workspace name'
-            required: true
-            type: string
-            default: 'default'
           layer:
             description: 'Layer name which have to be destroyed (e.g. bootstrap, ops, app)'
             type: string
             default: bootstrap
     workflow_dispatch:
       inputs:
-        workspace_name:
-          description: 'Workspace name'
-          required: true
-          type: string
-          default: 'default'
         layer:
           description: 'Layer name which have to be destroyed'
           required: true
@@ -60,8 +50,5 @@ jobs:
             - name: Terraform Validate
               run: terraform validate
 
-            - name: Terraform Select Workspace
-              run: |
-                terraform workspace select ${{ inputs.workspace_name }}
             - name: Terraform Destroy
-              run: terraform destroy -var="name=${{ inputs.workspace_name }}" -lock=true -lock-timeout=5m -auto-approve -input=false
+              run: terraform destroy -lock=true -lock-timeout=5m -auto-approve -input=false
