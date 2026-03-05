@@ -22,5 +22,5 @@ variable "tags" {
 
 variable "name" {
   type    = string
-  default = "ecs"
+  default = "studentus"
 }

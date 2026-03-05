@@ -9,7 +9,7 @@ variable "region" {
 
 variable "name" {
   type    = string
-  default = "default"
+  default = "studentus"
 }
 
 variable "vpc_cidr" {
@@ -20,8 +20,8 @@ variable "vpc_cidr" {
 variable "tags" {
   type = map(string)
   default = {
-    "clusterName" : "ecs",
-    "version" : "v1"
+    "version" : "v1",
+    "project" : "studentus"
   }
 }
 

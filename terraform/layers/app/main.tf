@@ -7,6 +7,7 @@ locals {
 resource "aws_cloudwatch_log_group" "frontend" {
   name              = "/ecs/${var.name}-frontend"
   retention_in_days = 7
+  tags              = var.tags
 }
 
 resource "aws_ecs_task_definition" "frontend" {
@@ -41,6 +42,8 @@ resource "aws_ecs_task_definition" "frontend" {
       }
     }
   }])
+
+  tags = var.tags
 }
 
 resource "aws_ecs_service" "frontend" {
@@ -57,4 +60,6 @@ resource "aws_ecs_service" "frontend" {
     security_groups  = [data.terraform_remote_state.ops.outputs.ecs_tasks_security_group_id]
     assign_public_ip = true
   }
+
+  tags = var.tags
 }

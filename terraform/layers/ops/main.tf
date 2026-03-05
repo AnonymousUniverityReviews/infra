@@ -12,13 +12,13 @@ module "ecs" {
 module "studentus_db" {
   source  = "../../modules/rds"
   name    = "studentus-db"
-  subnets = data.terraform_remote_state.bootstrap.outputs.eks_private_subnets[*].id
+  subnets = data.terraform_remote_state.bootstrap.outputs.private_subnets[*].id
 }
 
 module "backend_data_protection_db" {
   source  = "../../modules/rds"
   name    = "backend-data-protection-db"
-  subnets = data.terraform_remote_state.bootstrap.outputs.eks_private_subnets[*].id
+  subnets = data.terraform_remote_state.bootstrap.outputs.private_subnets[*].id
 }
 
 # module "migration_lambda" {
