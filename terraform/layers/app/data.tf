@@ -1,12 +1,4 @@
-data "aws_eks_cluster_auth" "eks" {
-  name = data.terraform_remote_state.eks.outputs.cluster_name
-}
-
-data "aws_eks_cluster" "eks" {
-  name = data.terraform_remote_state.eks.outputs.cluster_name
-}
-
-data "terraform_remote_state" "eks" {
+data "terraform_remote_state" "ops" {
   backend = "s3"
   config = {
     bucket = "anonymous-university-reviews-backend-bucket"
@@ -14,4 +6,13 @@ data "terraform_remote_state" "eks" {
     region = var.region
   }
   workspace = var.name
+}
+
+data "terraform_remote_state" "bootstrap" {
+  backend = "s3"
+  config = {
+    bucket = "anonymous-university-reviews-backend-bucket"
+    key    = "terraform-bootstrap.tfstate"
+    region = "eu-central-1"
+  }
 }

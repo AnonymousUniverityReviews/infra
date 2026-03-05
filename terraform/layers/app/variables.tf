@@ -1,6 +1,6 @@
 variable "name" {
   type    = string
-  default = "default"
+  default = "studentus"
 }
 
 variable "region" {

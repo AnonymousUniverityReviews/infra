@@ -20,7 +20,7 @@ variable "vpc_cidr" {
 variable "tags" {
   type = map(string)
   default = {
-    "clusterName" : "eks",
+    "clusterName" : "ecs",
     "version" : "v1"
   }
 }

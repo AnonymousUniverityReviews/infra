@@ -5,5 +5,5 @@ variable "tags" {
 
 variable "name" {
   type    = string
-  default = "eks"
+  default = "ecs"
 }
