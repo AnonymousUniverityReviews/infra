@@ -1,0 +1,46 @@
+name: Terraform Force Unlock
+run-name: Terraform Force Unlock ${{ inputs.layer }} layer, lock ${{ inputs.lock_id }}
+on:
+  workflow_dispatch:
+    inputs:
+      layer:
+        description: 'Layer name to apply (bootstrap, ops, app)'
+        required: true
+        type: choice
+        options:
+          - bootstrap
+          - ops
+          - app
+      lock_id:
+        description: 'Lock ID to force unlock'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  force-unlock:
+    runs-on: ubuntu-24.04
+    env:
+      TF_IN_AUTOMATION: true
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Authenticate to AWS
+        uses: aws-actions/configure-aws-credentials@v5.1.1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github_actions_oidc
+          role-session-name: GHA_TF_FORCE_UNLOCK
+          aws-region: eu-central-1
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init -input=false
+        working-directory: ./terraform/layers/${{ inputs.layer }}
+
+      - name: Terraform Force Unlock
+        run: terraform force-unlock -force ${{ inputs.lock_id }}
+        working-directory: ./terraform/layers/${{ inputs.layer }}
