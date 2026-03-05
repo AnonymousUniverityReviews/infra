@@ -28,6 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - id: plan
+        name: Run Terraform Plan Action
         uses: ./.github/actions/terraform-plan
         with:
           workspace_name: ${{ inputs.workspace_name }}
@@ -42,7 +43,8 @@ jobs:
     environment: prod
     steps:
       - uses: actions/checkout@v5
-      - uses: ./.github/actions/terraform-apply
+      - name: Run Terraform Apply Action
+        uses: ./.github/actions/terraform-apply
         with:
           workspace_name: ${{ inputs.workspace_name }}
           layer: ${{ inputs.layer }}
