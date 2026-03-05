@@ -22,7 +22,7 @@ resource "aws_eks_cluster" "eks" {
     endpoint_public_access  = true
   }
 
-  tags = var.tags
+
 }
 
 
@@ -30,7 +30,7 @@ resource "aws_eks_access_entry" "root_access" {
   cluster_name  = aws_eks_cluster.eks.name
   principal_arn = var.admin_user_arn
   type          = "STANDARD"
-  tags          = var.tags
+
 }
 
 resource "aws_eks_access_policy_association" "admin" {
@@ -66,7 +66,7 @@ resource "aws_iam_role" "oidc" {
   assume_role_policy = templatefile(var.oidc_role_path, {
     "oidc_arn" : aws_iam_openid_connect_provider.eks.arn,
   "oidc_url" : aws_iam_openid_connect_provider.eks.url })
-  tags = var.tags
+
 }
 
 resource "aws_iam_policy" "external_secrets_access_policy" {
@@ -79,7 +79,7 @@ resource "aws_iam_policy" "external_secrets_access_policy" {
 resource "aws_iam_role" "external_secrets_pod_identity_role" {
   name               = "external_secrets_pod_identity_role"
   assume_role_policy = file(var.pod_identity_role_path)
-  tags               = var.tags
+
 }
 
 resource "aws_iam_role_policy_attachment" "external_secrets_pod_identity_role_attach" {
@@ -102,7 +102,7 @@ resource "aws_iam_policy" "awslbc_policy" {
 resource "aws_iam_role" "awslbc_policy_role" {
   name               = "awslbc_role"
   assume_role_policy = file(var.pod_identity_role_path)
-  tags               = var.tags
+
 }
 
 resource "aws_iam_role_policy_attachment" "awslbc_policy_role_attach" {

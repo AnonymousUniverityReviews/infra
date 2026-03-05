@@ -13,7 +13,7 @@ resource "aws_iam_role" "ecs_task_execution_role" {
       }
     ]
   })
-  tags = var.tags
+
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
@@ -36,7 +36,7 @@ resource "aws_iam_role" "ecs_task_role" {
       }
     ]
   })
-  tags = var.tags
+
 }
 
 resource "aws_iam_policy" "ecs_task_secrets_policy" {

@@ -7,7 +7,7 @@ locals {
 resource "aws_cloudwatch_log_group" "frontend" {
   name              = "/ecs/${var.name}-frontend"
   retention_in_days = 7
-  tags              = var.tags
+
 }
 
 resource "aws_ecs_task_definition" "frontend" {
@@ -43,7 +43,7 @@ resource "aws_ecs_task_definition" "frontend" {
     }
   }])
 
-  tags = var.tags
+
 }
 
 resource "aws_security_group" "alb" {
@@ -65,7 +65,7 @@ resource "aws_security_group" "alb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = var.tags
+
 }
 
 resource "aws_lb" "frontend" {
@@ -75,7 +75,7 @@ resource "aws_lb" "frontend" {
   security_groups    = [aws_security_group.alb.id]
   subnets            = data.terraform_remote_state.bootstrap.outputs.public_subnets
 
-  tags = var.tags
+
 }
 
 resource "aws_lb_target_group" "frontend" {
@@ -94,7 +94,7 @@ resource "aws_lb_target_group" "frontend" {
     matcher             = "200-399"
   }
 
-  tags = var.tags
+
 }
 
 resource "aws_lb_listener" "frontend" {
@@ -129,5 +129,5 @@ resource "aws_ecs_service" "frontend" {
 
   depends_on = [aws_lb_listener.frontend]
 
-  tags = var.tags
+
 }

@@ -4,10 +4,9 @@ resource "aws_vpc" "vpc" {
   enable_dns_hostnames = true
   enable_dns_support   = true
 
-  tags = merge({
-    "Name" : "${var.name}_vpc" },
-    var.tags
-  )
+  tags = {
+    "Name" : "${var.name}_vpc"
+  }
 }
 
 resource "aws_subnet" "private_subnets" {
@@ -17,10 +16,9 @@ resource "aws_subnet" "private_subnets" {
 
   count = var.az_count
 
-  tags = merge({
-    "Name" : "${var.name}_private${count.index}_subnet" },
-    var.tags
-  )
+  tags = {
+    "Name" : "${var.name}_private${count.index}_subnet"
+  }
 }
 
 resource "aws_subnet" "public_subnets" {
@@ -30,18 +28,16 @@ resource "aws_subnet" "public_subnets" {
 
   count = var.az_count
 
-  tags = merge({
-    "Name" : "${var.name}_public${count.index}_subnet" },
-    var.tags
-  )
+  tags = {
+    "Name" : "${var.name}_public${count.index}_subnet"
+  }
 }
 
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.vpc.id
-  tags = merge({
-    "Name" : "${var.name}_igw" },
-    var.tags
-  )
+  tags = {
+    "Name" : "${var.name}_igw"
+  }
 }
 
 resource "aws_route_table" "public" {
@@ -52,10 +48,9 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.gw.id
   }
 
-  tags = merge({
-    "Name" : "${var.name}_rt_public" },
-    var.tags
-  )
+  tags = {
+    "Name" : "${var.name}_rt_public"
+  }
 }
 
 resource "aws_route_table_association" "public_subnets" {
@@ -70,20 +65,18 @@ resource "aws_eip" "nat" {
 
   depends_on = [aws_internet_gateway.gw]
 
-  tags = merge({
-    "Name" : "${var.name}_eip_nat" },
-    var.tags
-  )
+  tags = {
+    "Name" : "${var.name}_eip_nat"
+  }
 }
 
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat.id
   subnet_id     = aws_subnet.public_subnets[0].id
   depends_on    = [aws_internet_gateway.gw]
-  tags = merge({
-    "Name" : "${var.name}_nat" },
-    var.tags
-  )
+  tags = {
+    "Name" : "${var.name}_nat"
+  }
 }
 
 resource "aws_route_table" "private" {
@@ -95,10 +88,9 @@ resource "aws_route_table" "private" {
   }
   count = length(aws_subnet.private_subnets)
 
-  tags = merge({
-    "Name" : "${var.name}_rt${count.index}_private" },
-    var.tags
-  )
+  tags = {
+    "Name" : "${var.name}_rt${count.index}_private"
+  }
 }
 
 

@@ -1,7 +1,7 @@
 module "iam" {
   source = "../../modules/iam"
   name   = var.name
-  tags   = var.tags
+
 }
 
 module "ecs" {
@@ -49,6 +49,6 @@ resource "aws_security_group" "ecs_tasks" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = var.tags
+
 }
 

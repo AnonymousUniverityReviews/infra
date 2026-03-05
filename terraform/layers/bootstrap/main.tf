@@ -16,9 +16,9 @@ module "gh_oidc" {
 }
 
 module "networking" {
-  source   = "../../modules/network"
-  name     = var.name
-  tags     = var.tags
+  source = "../../modules/network"
+  name   = var.name
+
   vpc_cidr = var.vpc_cidr
 }
 
@@ -143,5 +143,5 @@ resource "aws_secretsmanager_secret_version" "openiddict_certificates" {
 #   vpc_id              = module.networking.vpc_id
 #   subnet_ids          = module.networking.private_subnet_ids
 #   target_network_cidr = module.networking.vpc_cidr
-#   tags                = var.tags
+
 # }

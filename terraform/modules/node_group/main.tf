@@ -16,7 +16,7 @@ resource "aws_eks_node_group" "eks_node_group" {
   update_config {
     max_unavailable = 1
   }
-  tags = var.tags
+
 }
 
 resource "aws_iam_role" "eks_node_autoscailing" {
@@ -24,7 +24,7 @@ resource "aws_iam_role" "eks_node_autoscailing" {
   assume_role_policy = templatefile(var.autoscailing_role_path, {
     "oidc_arn" : var.openid_connect_arn,
   "oidc_url" : var.openid_connect_url })
-  tags = var.tags
+
 }
 
 resource "aws_iam_role_policy" "eks_node_autoscailing" {
