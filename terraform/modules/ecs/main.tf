@@ -5,4 +5,8 @@ resource "aws_ecs_cluster" "ecs_cluster" {
     name  = "containerInsights"
     value = "enabled"
   }
+
+  lifecycle {
+    ignore_changes = [name]
+  }
 }

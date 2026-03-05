@@ -50,4 +50,7 @@ resource "aws_security_group" "ecs_tasks" {
   }
 
   tags = var.tags
+  lifecycle {
+    ignore_changes = [name]
+  }
 }
