@@ -54,3 +54,18 @@ resource "aws_security_group" "ecs_tasks" {
     ignore_changes = [name]
   }
 }
+
+import {
+  to = module.iam.aws_iam_role.ecs_task_execution_role
+  id = "studentus_ecs_task_execution_role"
+}
+
+import {
+  to = module.iam.aws_iam_role.ecs_task_role
+  id = "studentus_ecs_task_role"
+}
+
+import {
+  to = module.iam.aws_iam_policy.ecs_task_secrets_policy
+  id = "arn:aws:iam::585517712585:policy/studentus_ecs_task_secrets_policy"
+}
