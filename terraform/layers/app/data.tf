@@ -5,7 +5,6 @@ data "terraform_remote_state" "ops" {
     key    = "terraform-ops.tfstate"
     region = var.region
   }
-  workspace = var.name
 }
 
 data "terraform_remote_state" "bootstrap" {
