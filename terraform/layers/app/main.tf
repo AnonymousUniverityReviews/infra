@@ -96,14 +96,34 @@ resource "aws_lb_target_group" "frontend" {
 }
 
 resource "aws_lb_listener" "frontend" {
-  load_balancer_arn                                              = aws_lb.frontend.arn
-  port                                                           = "80"
-  protocol                                                       = "HTTP"
-  routing_http_response_access_control_allow_origin_header_value = "${var.domain_name}, api.${var.domain_name}"
+  load_balancer_arn = aws_lb.frontend.arn
+  port              = "80"
+  protocol          = "HTTP"
 
   default_action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/html"
+      message_body = "<h1>Page not found</h1>"
+      status_code  = "404"
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "frontend" {
+  listener_arn = aws_lb_listener.frontend.arn
+  priority     = 99
+
+  action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.frontend.arn
+  }
+
+  condition {
+    host_header {
+      values = ["${var.domain_name}"]
+    }
   }
 }
 
