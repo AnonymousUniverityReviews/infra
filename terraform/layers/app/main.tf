@@ -7,7 +7,6 @@ locals {
 resource "aws_cloudwatch_log_group" "frontend" {
   name              = "/ecs/${var.name}-frontend"
   retention_in_days = 7
-
 }
 
 resource "aws_ecs_task_definition" "frontend" {
@@ -97,9 +96,10 @@ resource "aws_lb_target_group" "frontend" {
 }
 
 resource "aws_lb_listener" "frontend" {
-  load_balancer_arn = aws_lb.frontend.arn
-  port              = "80"
-  protocol          = "HTTP"
+  load_balancer_arn                                              = aws_lb.frontend.arn
+  port                                                           = "80"
+  protocol                                                       = "HTTP"
+  routing_http_response_access_control_allow_origin_header_value = var.domain_name
 
   default_action {
     type             = "forward"
@@ -131,7 +131,96 @@ resource "aws_ecs_service" "frontend" {
 
 resource "cloudflare_dns_record" "frontend" {
   zone_id = data.cloudflare_zone.domain.id
-  name    = "@" # var.domain_name
+  name    = var.domain_name
+  content = aws_lb.frontend.dns_name
+  type    = "CNAME"
+  proxied = false
+  ttl     = 1
+}
+
+
+# backend
+
+resource "aws_cloudwatch_log_group" "backend" {
+  name              = "/ecs/${var.name}-backend"
+  retention_in_days = 7
+}
+
+
+resource "aws_ecs_task_definition" "backend" {
+  family                   = "${var.name}-backend"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "256"
+  memory                   = "512"
+  execution_role_arn       = data.terraform_remote_state.ops.outputs.ecs_task_execution_role_arn
+  task_role_arn            = data.terraform_remote_state.ops.outputs.ecs_task_role_arn
+
+  container_definitions = jsonencode([{
+    name      = "backend"
+    image     = "${local.account_id}.dkr.ecr.${var.region}.amazonaws.com/backend:dev-8fb160b"
+    essential = true
+    portMappings = [{
+      containerPort = 80
+      hostPort      = 80
+    }]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = aws_cloudwatch_log_group.backend.name
+        "awslogs-region"        = var.region
+        "awslogs-stream-prefix" = "ecs"
+      }
+    }
+  }])
+}
+
+resource "aws_ecs_service" "backend" {
+  name            = "${var.name}-backend"
+  cluster         = data.terraform_remote_state.ops.outputs.cluster_name
+  task_definition = aws_ecs_task_definition.backend.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets          = data.terraform_remote_state.bootstrap.outputs.private_subnets
+    security_groups  = [data.terraform_remote_state.ops.outputs.ecs_tasks_security_group_id]
+    assign_public_ip = false
+  }
+}
+
+resource "aws_lb_target_group" "backend" {
+  name        = "${var.name}-backend-tg"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = data.terraform_remote_state.bootstrap.outputs.vpc_id
+  target_type = "ip"
+
+  health_check {
+    path                = "/"
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    timeout             = 5
+    interval            = 30
+    matcher             = "200-399"
+  }
+}
+
+resource "aws_lb_listener" "backend" {
+  load_balancer_arn                                              = aws_lb.frontend.arn
+  port                                                           = "80"
+  protocol                                                       = "HTTP"
+  routing_http_response_access_control_allow_origin_header_value = "api.${var.domain_name}"
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.backend.arn
+  }
+}
+
+
+resource "cloudflare_dns_record" "backend" {
+  zone_id = data.cloudflare_zone.domain.id
+  name    = "api.${var.domain_name}"
   content = aws_lb.frontend.dns_name
   type    = "CNAME"
   proxied = false
