@@ -145,7 +145,6 @@ resource "aws_ecs_service" "frontend" {
     container_name   = "frontend"
     container_port   = 80
   }
-
   depends_on = [aws_lb_listener.frontend]
 }
 

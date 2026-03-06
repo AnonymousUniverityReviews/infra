@@ -44,6 +44,24 @@ resource "aws_secretsmanager_secret" "cloudflare_api_key" {
   description = "Cloudflare API key to be used by external-dns to update the DNS records"
 }
 
+resource "aws_secretsmanager_secret" "backend_secrets" {
+  name        = "studentus/backend/secrets"
+  description = "Backend secrets"
+}
+
+resource "aws_secretsmanager_secret_version" "backend_secrets" {
+  secret_id = aws_secretsmanager_secret.backend_secrets.id
+  secret_string = jsonencode({
+    "EMAIL_HASH_KEY" : "",
+    "EMAIL_VERIFICATION_TOKEN_HASH_KEY" : "",
+    "RESEND_KEY" : "",
+    "OPENIDDICT_ENCRYPTION_CERTIFICATE_FILE_CONTAINER_PATH" : "",
+    "OPENIDDICT_SIGNING_CERTIFICATE_FILE_CONTAINER_PATH" : "",
+    "OPENIDDICT_ENCRYPTION_CERTIFICATE_PASSWORD" : "",
+    "OPENIDDICT_SIGNING_CERTIFICATE_PASSWORD" : ""
+  })
+}
+
 resource "aws_secretsmanager_secret" "backend_email_hash_key" {
   name        = "backend/EmailSecrets/EmailHashKey"
   description = "Backend email hash key"
