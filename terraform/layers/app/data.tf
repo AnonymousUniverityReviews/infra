@@ -15,3 +15,15 @@ data "terraform_remote_state" "bootstrap" {
     region = "eu-central-1"
   }
 }
+
+data "aws_secretsmanager_secret" "cloudflare_api_key" {
+  name = "cloudflare_api_key"
+}
+
+data "aws_secretsmanager_secret_version" "cloudflare_api_key_version" {
+  secret_id = data.aws_secretsmanager_secret.cloudflare_api_key.id
+}
+
+data "cloudflare_zone" "domain" {
+  name = var.domain_name
+}

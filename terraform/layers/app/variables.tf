@@ -14,3 +14,9 @@ variable "tags" {
     "project" : "studentus"
   }
 }
+
+variable "domain_name" {
+  type        = string
+  description = "The domain name for the frontend application (e.g., studentus.tech)"
+  default     = "studentus.tech"
+}
