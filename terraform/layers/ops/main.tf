@@ -4,11 +4,6 @@ module "iam" {
 
 }
 
-module "ecs" {
-  source       = "../../modules/ecs"
-  cluster_name = var.name
-}
-
 module "studentus_db" {
   source  = "../../modules/rds"
   name    = "studentus-db"
@@ -30,6 +25,11 @@ module "backend_data_protection_db" {
 #   source_file = "../../../lambda/dbmigrations"
 # }
 
+module "ecs" {
+  source       = "../../modules/ecs"
+  cluster_name = var.name
+}
+
 resource "aws_security_group" "ecs_tasks" {
   name        = "${var.name}-ecs-tasks-sg"
   description = "Security group for ECS tasks"
@@ -48,7 +48,5 @@ resource "aws_security_group" "ecs_tasks" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-
 }
 

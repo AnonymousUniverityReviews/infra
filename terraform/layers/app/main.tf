@@ -14,8 +14,8 @@ resource "aws_ecs_task_definition" "frontend" {
   family                   = "${var.name}-frontend"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "256"
-  memory                   = "512"
+  cpu                      = "128"
+  memory                   = "256"
   execution_role_arn       = data.terraform_remote_state.ops.outputs.ecs_task_execution_role_arn
   task_role_arn            = data.terraform_remote_state.ops.outputs.ecs_task_role_arn
 
@@ -42,8 +42,6 @@ resource "aws_ecs_task_definition" "frontend" {
       }
     }
   }])
-
-
 }
 
 resource "aws_security_group" "alb" {
@@ -64,8 +62,6 @@ resource "aws_security_group" "alb" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-
 }
 
 resource "aws_lb" "frontend" {
@@ -74,8 +70,6 @@ resource "aws_lb" "frontend" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
   subnets            = data.terraform_remote_state.bootstrap.outputs.public_subnets
-
-
 }
 
 resource "aws_lb_target_group" "frontend" {
@@ -93,8 +87,6 @@ resource "aws_lb_target_group" "frontend" {
     interval            = 30
     matcher             = "200-399"
   }
-
-
 }
 
 resource "aws_lb_listener" "frontend" {
@@ -128,6 +120,4 @@ resource "aws_ecs_service" "frontend" {
   }
 
   depends_on = [aws_lb_listener.frontend]
-
-
 }
