@@ -25,5 +25,7 @@ data "aws_secretsmanager_secret_version" "cloudflare_api_key_version" {
 }
 
 data "cloudflare_zone" "domain" {
-  name = var.domain_name
+  filter = {
+    name = var.domain_name
+  }
 }

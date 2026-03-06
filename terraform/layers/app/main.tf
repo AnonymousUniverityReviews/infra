@@ -129,10 +129,11 @@ resource "aws_ecs_service" "frontend" {
   depends_on = [aws_lb_listener.frontend]
 }
 
-resource "cloudflare_record" "frontend" {
+resource "cloudflare_dns_record" "frontend" {
   zone_id = data.cloudflare_zone.domain.id
   name    = var.domain_name
-  value   = aws_lb.frontend.dns_name
+  content = aws_lb.frontend.dns_name
   type    = "CNAME"
   proxied = true
+  ttl     = 3600
 }
