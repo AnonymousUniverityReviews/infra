@@ -131,9 +131,9 @@ resource "aws_ecs_service" "frontend" {
 
 resource "cloudflare_dns_record" "frontend" {
   zone_id = data.cloudflare_zone.domain.id
-  name    = var.domain_name
+  name    = "@" # var.domain_name
   content = aws_lb.frontend.dns_name
   type    = "CNAME"
   proxied = false
-  ttl     = 3600
+  ttl     = 1
 }
