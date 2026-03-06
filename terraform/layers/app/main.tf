@@ -14,8 +14,8 @@ resource "aws_ecs_task_definition" "frontend" {
   family                   = "${var.name}-frontend"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "128"
-  memory                   = "256"
+  cpu                      = "256"
+  memory                   = "512"
   execution_role_arn       = data.terraform_remote_state.ops.outputs.ecs_task_execution_role_arn
   task_role_arn            = data.terraform_remote_state.ops.outputs.ecs_task_role_arn
 
