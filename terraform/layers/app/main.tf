@@ -134,6 +134,6 @@ resource "cloudflare_dns_record" "frontend" {
   name    = var.domain_name
   content = aws_lb.frontend.dns_name
   type    = "CNAME"
-  proxied = true
+  proxied = false
   ttl     = 3600
 }
