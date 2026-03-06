@@ -121,18 +121,6 @@ resource "aws_secretsmanager_secret_version" "openiddict_certificates_meta" {
   })
 }
 
-resource "aws_secretsmanager_secret" "openiddict_certificates" {
-  name        = "backend/OpenIdDictCertificates"
-  description = "OpenIdDict certificates secrets"
-}
-
-resource "aws_secretsmanager_secret_version" "openiddict_certificates" {
-  secret_id = aws_secretsmanager_secret.openiddict_certificates.id
-  secret_string = jsonencode({
-    "server-encryption-certificate" : "",
-    "server-signing-certificate" : ""
-  })
-}
 
 # module "vpn" {
 #   source = "../../modules/vpn"
