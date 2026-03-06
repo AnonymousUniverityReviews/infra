@@ -87,9 +87,7 @@ resource "aws_secretsmanager_secret_version" "main_database" {
   secret_string = jsonencode({
     "DatabaseConnections__MainDatabase__Host" : "",
     "DatabaseConnections__MainDatabase__Port" : "",
-    "DatabaseConnections__MainDatabase__Database" : "",
-    "DatabaseConnections__MainDatabase__Username" : "",
-    "DatabaseConnections__MainDatabase__Password" : ""
+    "DatabaseConnections__MainDatabase__Database" : ""
   })
 }
 
@@ -103,9 +101,7 @@ resource "aws_secretsmanager_secret_version" "data_protection_database" {
   secret_string = jsonencode({
     "DatabaseConnections__DataProtectionDatabase__Host" : "",
     "DatabaseConnections__DataProtectionDatabase__Port" : "",
-    "DatabaseConnections__DataProtectionDatabase__Database" : "",
-    "DatabaseConnections__DataProtectionDatabase__Username" : "",
-    "DatabaseConnections__DataProtectionDatabase__Password" : ""
+    "DatabaseConnections__DataProtectionDatabase__Database" : ""
   })
 }
 
