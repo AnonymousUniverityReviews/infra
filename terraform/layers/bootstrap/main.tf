@@ -62,21 +62,6 @@ resource "aws_secretsmanager_secret_version" "backend_secrets" {
   })
 }
 
-resource "aws_secretsmanager_secret" "backend_email_hash_key" {
-  name        = "backend/EmailSecrets/EmailHashKey"
-  description = "Backend email hash key"
-}
-
-resource "aws_secretsmanager_secret" "backend_email_verification_token_hash_key" {
-  name        = "backend/EmailSecrets/EmailVerificationTokenHashKey"
-  description = "Backend email verification token hash key"
-}
-
-resource "aws_secretsmanager_secret" "backend_resend_key" {
-  name        = "backend/ResendKey"
-  description = "Backend resend key"
-}
-
 resource "aws_secretsmanager_secret" "frontend_secrets" {
   name        = "frontend/secrets"
   description = "Frontend secrets"
@@ -123,22 +108,6 @@ resource "aws_secretsmanager_secret_version" "data_protection_database" {
     "DatabaseConnections__DataProtectionDatabase__Password" : ""
   })
 }
-
-resource "aws_secretsmanager_secret" "openiddict_certificates_meta" {
-  name        = "backend/OpenIdDictCertificatesMeta"
-  description = "OpenIdDict certificates secrets"
-}
-
-resource "aws_secretsmanager_secret_version" "openiddict_certificates_meta" {
-  secret_id = aws_secretsmanager_secret.openiddict_certificates_meta.id
-  secret_string = jsonencode({
-    "OPENIDDICT_ENCRYPTION_CERTIFICATE_FILE_CONTAINER_PATH" : "",
-    "OPENIDDICT_SIGNING_CERTIFICATE_FILE_CONTAINER_PATH" : "",
-    "OPENIDDICT_ENCRYPTION_CERTIFICATE_PASSWORD" : "",
-    "OPENIDDICT_SIGNING_CERTIFICATE_PASSWORD" : ""
-  })
-}
-
 
 # module "vpn" {
 #   source = "../../modules/vpn"
