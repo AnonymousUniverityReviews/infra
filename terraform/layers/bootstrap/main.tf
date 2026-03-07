@@ -127,13 +127,13 @@ resource "aws_acm_certificate" "cert" {
   }
 }
 
-# resource "cloudflare_dns_record" "cert_validation" {
-#   zone_id = data.cloudflare_zone.domain.zone_id
-#   name    = aws_acm_certificate.cert.domain_validation_options[0].resource_record_name
-#   type    = aws_acm_certificate.cert.domain_validation_options[0].resource_record_type
-#   ttl     = 60
-#   content = aws_acm_certificate.cert.domain_validation_options[0].resource_record_value
-# }
+resource "cloudflare_dns_record" "cert_validation" {
+  zone_id = data.cloudflare_zone.domain.zone_id
+  name    = tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_name
+  type    = tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_type
+  ttl     = 60
+  content = tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_value
+}
 
 # module "vpn" {
 #   source = "../../modules/vpn"
