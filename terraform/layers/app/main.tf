@@ -62,6 +62,13 @@ resource "aws_security_group" "alb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -97,8 +104,9 @@ resource "aws_lb_target_group" "frontend" {
 
 resource "aws_lb_listener" "frontend" {
   load_balancer_arn = aws_lb.frontend.arn
-  port              = "80"
-  protocol          = "HTTP"
+  port              = "443"
+  protocol          = "HTTPS"
+  certificate_arn   = data.terraform_remote_state.bootstrap.outputs.acm_certificate_arn
 
   default_action {
     type = "fixed-response"
@@ -107,6 +115,22 @@ resource "aws_lb_listener" "frontend" {
       content_type = "text/html"
       message_body = "<h1>Page not found</h1>"
       status_code  = "404"
+    }
+  }
+}
+
+resource "aws_lb_listener" "frontend_redirect" {
+  load_balancer_arn = aws_lb.frontend.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
     }
   }
 }

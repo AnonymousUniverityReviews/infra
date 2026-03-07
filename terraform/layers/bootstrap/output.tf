@@ -26,3 +26,8 @@ output "domain_zone_id" {
   value     = data.cloudflare_zone.domain.zone_id
   sensitive = true
 }
+
+output "acm_certificate_arn" {
+  value = aws_acm_certificate.cert.arn
+}
+
