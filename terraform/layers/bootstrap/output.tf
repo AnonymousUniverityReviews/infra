@@ -26,6 +26,3 @@ output "domain_zone_id" {
   value = data.cloudflare_zone.domain.zone_id
 }
 
-output "acm_certificate_validation_options" {
-  value = aws_acm_certificate.cert.domain_validation_options
-}
