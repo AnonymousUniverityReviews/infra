@@ -2,10 +2,16 @@ resource "aws_s3_bucket" "backend_bucket" {
   bucket = "anonymous-university-reviews-backend-bucket"
 
   object_lock_enabled = true
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_s3_bucket" "migration_bucket" {
   bucket = "anonymous-university-migration-bucket"
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 module "gh_oidc" {
@@ -29,6 +35,9 @@ resource "aws_ecr_repository" "frontend" {
   image_scanning_configuration {
     scan_on_push = true
   }
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_ecr_repository" "backend" {
@@ -36,6 +45,9 @@ resource "aws_ecr_repository" "backend" {
   image_tag_mutability = "MUTABLE"
   image_scanning_configuration {
     scan_on_push = true
+  }
+  lifecycle {
+    prevent_destroy = true
   }
 }
 
@@ -104,6 +116,24 @@ resource "aws_secretsmanager_secret_version" "data_protection_database" {
     "DatabaseConnections__DataProtectionDatabase__Database" : ""
   })
 }
+
+
+resource "aws_acm_certificate" "cert" {
+  domain_name               = var.domain
+  validation_method         = "DNS"
+  subject_alternative_names = ["*.${var.domain}"]
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+# resource "aws_route53_record" "cert_validation" {
+#   zone_id = data.aws_route53_zone.main.zone_id
+#   name    = acm_certificate.cert.domain_validation_options[0].resource_record_name
+#   type    = acm_certificate.cert.domain_validation_options[0].resource_record_type
+#   ttl     = 60
+#   records = [acm_certificate.cert.domain_validation_options[0].resource_record_value]
+# }
 
 # module "vpn" {
 #   source = "../../modules/vpn"

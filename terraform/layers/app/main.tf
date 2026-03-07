@@ -192,6 +192,12 @@ resource "aws_ecs_task_definition" "backend" {
       }
     }
   }])
+  lifecycle {
+    ignore_changes = [
+      task_definition,
+      desired_count
+    ]
+  }
 }
 
 resource "aws_ecs_service" "backend" {
