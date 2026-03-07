@@ -127,13 +127,13 @@ resource "aws_acm_certificate" "cert" {
   }
 }
 
-resource "cloudflare_record" "cert_validation" {
+resource "cloudflare_dns_record" "cert_validation" {
   zone_id  = data.cloudflare_zone.domain.zone_id
   name     = each.value.resource_record_name
   type     = each.value.resource_record_type
   ttl      = 60
-  records  = [each.value.resource_record_value]
-  for_each = acm_certificate.cert.domain_validation_options
+  content  = each.value.resource_record_value
+  for_each = aws_acm_certificate.cert.domain_validation_options
 }
 
 # resource "aws_route53_record" "cert_validation" {
