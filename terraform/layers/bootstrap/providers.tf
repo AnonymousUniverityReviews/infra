@@ -5,6 +5,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "6.17.0"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "5.18.0"
+    }
   }
 }
 
@@ -14,4 +18,8 @@ provider "aws" {
   default_tags {
     tags = var.tags
   }
+}
+
+provider "cloudflare" {
+  api_token = data.aws_secretsmanager_secret_version.cloudflare_api_key_version.secret_string
 }

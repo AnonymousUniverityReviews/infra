@@ -13,3 +13,15 @@ output "public_subnets" {
 output "cloudflare_api_key_secret_arn" {
   value = aws_secretsmanager_secret.cloudflare_api_key.arn
 }
+
+output "cloudflare_api_key_secret_id" {
+  value = aws_secretsmanager_secret.cloudflare_api_key.id
+}
+
+output "domain" {
+  value = var.domain
+}
+
+output "domain_zone_id" {
+  value = data.cloudflare_zone.domain.zone_id
+}

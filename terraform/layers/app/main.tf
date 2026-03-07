@@ -122,7 +122,7 @@ resource "aws_lb_listener_rule" "frontend" {
 
   condition {
     host_header {
-      values = ["${var.domain_name}"]
+      values = [data.terraform_remote_state.bootstrap.outputs.domain]
     }
   }
 }
@@ -149,8 +149,8 @@ resource "aws_ecs_service" "frontend" {
 }
 
 resource "cloudflare_dns_record" "frontend" {
-  zone_id = data.cloudflare_zone.domain.id
-  name    = var.domain_name
+  zone_id = data.terraform_remote_state.bootstrap.outputs.domain_zone_id
+  name    = data.terraform_remote_state.bootstrap.outputs.domain
   content = aws_lb.frontend.dns_name
   type    = "CNAME"
   proxied = false
@@ -242,15 +242,15 @@ resource "aws_lb_listener_rule" "backend" {
 
   condition {
     host_header {
-      values = ["api.${var.domain_name}"]
+      values = ["api.${data.terraform_remote_state.bootstrap.outputs.domain}"]
     }
   }
 }
 
 
 resource "cloudflare_dns_record" "backend" {
-  zone_id = data.cloudflare_zone.domain.id
-  name    = "api.${var.domain_name}"
+  zone_id = data.terraform_remote_state.bootstrap.outputs.domain_zone_id
+  name    = "api.${data.terraform_remote_state.bootstrap.outputs.domain}"
   content = aws_lb.frontend.dns_name
   type    = "CNAME"
   proxied = false
