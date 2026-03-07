@@ -23,6 +23,7 @@ output "domain" {
 }
 
 output "domain_zone_id" {
-  value = data.cloudflare_zone.domain.zone_id
+  value     = data.cloudflare_zone.domain.zone_id
+  sensitive = true
 }
 
