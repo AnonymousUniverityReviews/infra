@@ -27,3 +27,6 @@ output "domain_zone_id" {
   sensitive = true
 }
 
+output "acm_certificate_validation_options" {
+  value = aws_acm_certificate.cert.domain_validation_options
+}
