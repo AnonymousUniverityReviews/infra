@@ -133,6 +133,11 @@ resource "cloudflare_dns_record" "cert_validation" {
   type    = tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_type
   ttl     = 60
   content = tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_value
+  lifecycle {
+    ignore_changes = [
+      modified_on
+    ]
+  }
 }
 
 # module "vpn" {
